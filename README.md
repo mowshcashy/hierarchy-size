@@ -30,6 +30,7 @@ No subscriptions. No accounts. No tracking. Just answers.
 | 🗑️ **Clean up safely** | Move items to the Trash right from the app — sizes update live, and everything stays recoverable. |
 | 📤 **Export to CSV** | Take a full report to Excel, Numbers or Google Sheets. |
 | 💾 **Drives overview** | Every mounted drive with used / free space at a glance. |
+| 👻 **Hidden Space** | Finally see the space no other analyzer shows: snapshots, swap memory, system volumes, Preboot and mounted disk images. Delete Time Machine snapshots safely in one click. |
 | 🧮 **Size on disk vs file size** | Switch between real allocated space and logical file size. |
 | 🍎 **100% native** | Built with Swift & SwiftUI. Light, fast, and feels at home on your Mac — dark mode included. |
 
@@ -49,7 +50,7 @@ No subscriptions. No accounts. No tracking. Just answers.
 
 ## 🚀 Get it
 
-1. Download **Hierarchy-Size-1.0.zip** from the [latest release](../../releases/latest).
+1. Download **Hierarchy-Size-1.1.zip** from the [latest release](../../releases/latest).
 2. Unzip it and drag **Hierarchy Size** into your **Applications** folder.
 3. The first time, **right-click the app → Open** (it isn't notarized by Apple yet).
 
@@ -64,6 +65,7 @@ No subscriptions. No accounts. No tracking. Just answers.
 | ⌘O | Scan a folder |
 | ⌘R | Rescan |
 | ⌘↑ | Go to the enclosing folder |
+| ⌘⇧H | Hidden Space |
 | ⌘1 – ⌘5 | Tree · Treemap · File Types · Largest Files · File Age |
 | ⌘⌥R | Reveal selection in Finder |
 | ⌘⌫ | Move selection to Trash |
@@ -103,6 +105,7 @@ Hierarchy Size runs entirely on your Mac. It never uploads, collects or sends an
 - 🟦 خريطة مربعات (Treemap) توضح الملفات الكبيرة فوراً
 - 🥧 تحليل حسب نوع الملف: فيديو، صور، تطبيقات، أرشيف…
 - 🏆 قائمة أكبر الملفات و📅 تقرير عمر الملفات
+- 👻 المساحة المخفية: اللقطات، ذاكرة التبديل، أجزاء النظام وملفات الأقراص
 - 🗑️ حذف آمن لسلة المهملات، وتصدير CSV
 - 🔒 يشتغل على جهازك فقط، بدون إنترنت وبدون تتبّع
 

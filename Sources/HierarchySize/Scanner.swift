@@ -79,7 +79,11 @@ struct Scanner {
             guard let v = try? u.resourceValues(forKeys: Self.keySet) else { continue }
             let isLink = v.isSymbolicLink ?? false
             let isDir = (v.isDirectory ?? false) && !isLink
-            if isDir && excluded.contains(u.path) { continue }
+            if isDir {
+                var p = u.path
+                while p.count > 1 && p.hasSuffix("/") { p.removeLast() }
+                if excluded.contains(p) { continue }
+            }
             let child = FileNode(url: u, name: u.lastPathComponent, isDirectory: isDir)
             child.parent = node
             child.modified = v.contentModificationDate
