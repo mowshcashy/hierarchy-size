@@ -50,6 +50,12 @@ final class AppModel: ObservableObject {
     @Published var showHiddenSpace = false
     @Published var hiddenReport: HiddenSpaceReport?
     @Published var hiddenLoading = false
+    @Published var pendingDeleteNow: FileNode?
+    @Published var pendingAdminDelete: FileNode?
+    @Published var trashSize: Int64?
+    @Published var trashCount = 0
+    @Published var hasFullDiskAccess = false
+    @Published var showPermissions = false
     @Published var sizeMode: SizeMode = .allocated {
         didSet { applySort(); recomputeStats() }
     }
@@ -63,6 +69,7 @@ final class AppModel: ObservableObject {
 
     init() {
         refreshVolumes()
+        refreshTrash()
         // `open -a "Hierarchy Size" --args /some/folder` scans that folder on launch.
         if let arg = CommandLine.arguments.dropFirst().first(where: { !$0.hasPrefix("-") }) {
             var isDir: ObjCBool = false
@@ -225,16 +232,144 @@ final class AppModel: ObservableObject {
         pendingTrash = nil
         do {
             try FileManager.default.trashItem(at: node.url, resultingItemURL: nil)
-            if let f = focus, f.isDescendant(of: node) { focus = node.parent }
-            if let s = selection, s.isDescendant(of: node) { selection = nil }
-            node.detachFromParent()
-            searchResults.removeAll { $0.isDescendant(of: node) }
-            revision += 1
-            recomputeStats()
-            refreshVolumes()
+            removeFromTree(node)
         } catch {
             errorMessage = "Couldn't move “\(node.name)” to the Trash: \(error.localizedDescription)"
         }
+    }
+
+    func requestDeleteNow(_ node: FileNode) {
+        guard node.parent != nil, Self.isSafeToDelete(node.url) else {
+            errorMessage = "“\(node.name)” is a protected system location and can't be deleted from here."
+            return
+        }
+        pendingDeleteNow = node
+    }
+
+    /// Deletes permanently (skips the Trash). Falls back to an administrator prompt when needed.
+    func confirmDeleteNow() {
+        guard let node = pendingDeleteNow else { return }
+        pendingDeleteNow = nil
+        do {
+            try FileManager.default.removeItem(at: node.url)
+            removeFromTree(node)
+        } catch {
+            if FileManager.default.fileExists(atPath: node.path) {
+                pendingAdminDelete = node
+            } else {
+                removeFromTree(node)   // partly removed but gone now
+            }
+        }
+    }
+
+    func confirmAdminDelete() {
+        guard let node = pendingAdminDelete else { return }
+        pendingAdminDelete = nil
+        guard Self.isSafeToDelete(node.url) else { return }
+        let quoted = "'" + node.path.replacingOccurrences(of: "'", with: "'\\''") + "'"
+        if let e = HiddenSpace.runAsAdmin("/bin/rm -rf \(quoted)") {
+            errorMessage = "Couldn't delete “\(node.name)”: \(e)\n\nIf it says “Operation not permitted”, give Hierarchy Size Full Disk Access (sidebar › Permissions). Some files are protected by macOS and can't be deleted at all."
+        }
+        if FileManager.default.fileExists(atPath: node.path) {
+            if errorMessage == nil {
+                errorMessage = "Some files in “\(node.name)” couldn't be deleted. macOS protects them."
+            }
+            rescanAfterPartialDelete(node)
+        } else {
+            removeFromTree(node)
+        }
+    }
+
+    private func removeFromTree(_ node: FileNode) {
+        if let f = focus, f.isDescendant(of: node) { focus = node.parent }
+        if let s = selection, s.isDescendant(of: node) { selection = nil }
+        node.detachFromParent()
+        searchResults.removeAll { $0.isDescendant(of: node) }
+        revision += 1
+        recomputeStats()
+        refreshVolumes()
+        refreshTrash()
+    }
+
+    private func rescanAfterPartialDelete(_ node: FileNode) {
+        if let r = root { scan(r.url) } else { refreshVolumes() }
+    }
+
+    /// Never offer permanent deletion of the system or of top-level folders.
+    static func isSafeToDelete(_ url: URL) -> Bool {
+        let p = url.standardizedFileURL.path
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let blocked = ["/", "/System", "/Library", "/Applications", "/Users", "/private", "/usr", "/bin", "/sbin",
+                       "/etc", "/var", "/Volumes", "/opt", home, home + "/Library", home + "/Documents",
+                       home + "/Desktop", home + "/Downloads", home + "/Pictures", home + "/Movies", home + "/Music"]
+        if blocked.contains(p) { return false }
+        if p.hasPrefix("/System/") && !p.hasPrefix("/System/Volumes/Data/") { return false }
+        return url.pathComponents.count > 2
+    }
+
+    // MARK: Trash & permissions
+
+    func refreshTrash() {
+        Task.detached(priority: .utility) {
+            let trash = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".Trash")
+            var total: Int64 = 0
+            var readable = true
+            var count = 0
+            do {
+                let items = try FileManager.default.contentsOfDirectory(at: trash, includingPropertiesForKeys: nil)
+                count = items.count
+                let e = FileManager.default.enumerator(at: trash, includingPropertiesForKeys: [.totalFileAllocatedSizeKey, .isRegularFileKey])
+                while let u = e?.nextObject() as? URL {
+                    total += Int64((try? u.resourceValues(forKeys: [.totalFileAllocatedSizeKey]))?.totalFileAllocatedSize ?? 0)
+                }
+            } catch { readable = false }
+            let fda = Self.hasFullDiskAccess()
+            let (t, r, c) = (total, readable, count)
+            await MainActor.run {
+                self.trashSize = r ? t : nil
+                self.trashCount = c
+                self.hasFullDiskAccess = fda
+            }
+        }
+    }
+
+    /// Full Disk Access is granted when TCC-protected locations can be listed.
+    nonisolated static func hasFullDiskAccess() -> Bool {
+        let home = FileManager.default.homeDirectoryForCurrentUser
+        let probes = [home.appendingPathComponent("Library/Safari"),
+                      home.appendingPathComponent("Library/Mail"),
+                      home.appendingPathComponent(".Trash"),
+                      URL(fileURLWithPath: "/Library/Application Support/com.apple.TCC")]
+        for p in probes where FileManager.default.fileExists(atPath: p.path) {
+            if (try? FileManager.default.contentsOfDirectory(atPath: p.path)) != nil { return true }
+            return false
+        }
+        return false
+    }
+
+    func emptyTrash() {
+        var err: NSDictionary?
+        NSAppleScript(source: "tell application \"Finder\" to empty trash")?.executeAndReturnError(&err)
+        if let err, (err[NSAppleScript.errorNumber] as? Int) != -128 {
+            errorMessage = "Couldn't empty the Trash: \(err[NSAppleScript.errorMessage] as? String ?? "unknown error"). Allow Hierarchy Size to control Finder in System Settings › Privacy & Security › Automation."
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { self.refreshTrash(); self.refreshVolumes() }
+    }
+
+    func openPrivacySettings(_ anchor: String) {
+        if let u = URL(string: "x-apple.systempreferences:com.apple.preference.security?\(anchor)") {
+            NSWorkspace.shared.open(u)
+        }
+    }
+
+    /// Relaunch so newly granted permissions take effect.
+    func relaunch() {
+        let path = Bundle.main.bundlePath
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/bin/sh")
+        task.arguments = ["-c", "sleep 1; open \"$0\"", path]
+        try? task.run()
+        NSApp.terminate(nil)
     }
 
     // MARK: Volumes

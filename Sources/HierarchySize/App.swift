@@ -39,6 +39,11 @@ struct HierarchySizeApp: App {
                     .keyboardShortcut("r", modifiers: [.command, .option])
                 Button("Move Selection to Trash…") { if let s = model.selection { model.requestTrash(s) } }
                     .keyboardShortcut(.delete, modifiers: .command)
+                Button("Delete Selection Immediately…") { if let s = model.selection { model.requestDeleteNow(s) } }
+                    .keyboardShortcut(.delete, modifiers: [.command, .option])
+                Divider()
+                Button("Empty Trash") { model.emptyTrash() }
+                Button("Permissions…") { model.showPermissions = true }
             }
             CommandMenu("View") {
                 ForEach(Array(MainTab.allCases.enumerated()), id: \.element) { i, t in

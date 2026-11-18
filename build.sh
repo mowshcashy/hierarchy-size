@@ -33,6 +33,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>LSMinimumSystemVersion</key><string>14.0</string>
   <key>LSApplicationCategoryType</key><string>public.app-category.utilities</string>
   <key>NSHighResolutionCapable</key><true/>
+  <key>NSAppleEventsUsageDescription</key><string>Hierarchy Size asks Finder to empty the Trash when you click Empty.</string>
 </dict></plist>
 PLIST
 codesign --force --deep --sign - "$APP"

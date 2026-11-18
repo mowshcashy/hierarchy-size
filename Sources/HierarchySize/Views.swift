@@ -64,8 +64,36 @@ struct ContentView: View {
             Button("Cancel", role: .cancel) { model.pendingTrash = nil }
         } message: {
             if let n = model.pendingTrash {
-                Text("\(n.size(model.sizeMode).bytesString)\(n.isDirectory ? " in \(n.fileCount.formatted()) files" : "") will be moved to the Trash. You can restore it from the Trash.")
+                Text("\(n.size(model.sizeMode).bytesString)\(n.isDirectory ? " in \(n.fileCount.formatted()) files" : "") will be moved to the Trash. The space is freed only after you empty the Trash.")
             }
+        }
+        .confirmationDialog(
+            "Delete “\(model.pendingDeleteNow?.name ?? "")” immediately?",
+            isPresented: Binding(get: { model.pendingDeleteNow != nil }, set: { if !$0 { model.pendingDeleteNow = nil } }),
+            titleVisibility: .visible
+        ) {
+            Button("Delete Immediately", role: .destructive) { model.confirmDeleteNow() }
+            Button("Cancel", role: .cancel) { model.pendingDeleteNow = nil }
+        } message: {
+            if let n = model.pendingDeleteNow {
+                Text("\(n.size(model.sizeMode).bytesString) will be deleted for good and freed right away. This can't be undone.")
+            }
+        }
+        .confirmationDialog(
+            "Administrator permission needed",
+            isPresented: Binding(get: { model.pendingAdminDelete != nil }, set: { if !$0 { model.pendingAdminDelete = nil } }),
+            titleVisibility: .visible
+        ) {
+            Button("Delete as Administrator", role: .destructive) { model.confirmAdminDelete() }
+            Button("Cancel", role: .cancel) { model.pendingAdminDelete = nil }
+        } message: {
+            Text("Some items in “\(model.pendingAdminDelete?.name ?? "")” belong to the system or another user. macOS will ask for your password to delete them.")
+        }
+        .sheet(isPresented: $model.showPermissions) {
+            PermissionsView().environmentObject(model)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            model.refreshTrash()
         }
         .sheet(isPresented: $model.showHiddenSpace) {
             HiddenSpaceView().environmentObject(model)
@@ -135,6 +163,31 @@ struct SidebarView: View {
                 Button { model.showHiddenSpace = true } label: { Label("Hidden Space…", systemImage: "eye.slash") }
                     .buttonStyle(.plain)
                     .help("Snapshots, system volumes, swap and disk images")
+            }
+            Section("Cleanup") {
+                HStack {
+                    Label {
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("Trash")
+                            Text(model.trashSize.map { $0 > 0 ? $0.bytesString : "Empty" } ?? "Needs permission to read")
+                                .font(.caption2).foregroundStyle(.secondary)
+                        }
+                    } icon: { Image(systemName: (model.trashSize ?? 1) > 0 ? "trash.fill" : "trash") }
+                    Spacer()
+                    if (model.trashSize ?? 1) > 0 {
+                        Button("Empty") { model.emptyTrash() }.controlSize(.small)
+                    }
+                }
+                Button { model.showPermissions = true } label: {
+                    Label {
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("Permissions")
+                            Text(model.hasFullDiskAccess ? "Full Disk Access on" : "Full Disk Access off")
+                                .font(.caption2).foregroundStyle(model.hasFullDiskAccess ? Color.green : Color.orange)
+                        }
+                    } icon: { Image(systemName: model.hasFullDiskAccess ? "checkmark.shield" : "exclamationmark.shield") }
+                }
+                .buttonStyle(.plain)
             }
             Section("Places") {
                 ForEach(places, id: \.0) { p in
@@ -316,7 +369,7 @@ struct StatusBar: View {
             Spacer()
             if model.scanErrors > 0 {
                 Button {
-                    model.openFullDiskAccessSettings()
+                    model.showPermissions = true
                 } label: {
                     Label("\(model.scanErrors) folders couldn't be read — grant Full Disk Access", systemImage: "lock.trianglebadge.exclamationmark")
                 }
@@ -345,6 +398,8 @@ struct NodeMenu: View {
         Button("Copy Path") { model.copyPath(node) }
         Divider()
         Button("Move to Trash…", role: .destructive) { model.requestTrash(node) }
+            .disabled(node.parent == nil)
+        Button("Delete Immediately…", role: .destructive) { model.requestDeleteNow(node) }
             .disabled(node.parent == nil)
     }
 }
@@ -597,6 +652,85 @@ struct FileAgeView: View {
             .padding(20)
         } else {
             ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+}
+
+// MARK: - Permissions
+
+struct PermissionsView: View {
+    @EnvironmentObject var model: AppModel
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            HStack {
+                Label("Permissions", systemImage: "lock.shield").font(.title2.bold())
+                Spacer()
+                Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
+            }
+
+            row(granted: model.hasFullDiskAccess,
+                title: "Full Disk Access",
+                detail: "Lets Hierarchy Size read and delete everywhere you can: the Trash, Mail, Safari, other apps' containers and protected caches. Without it some folders show as locked and some deletes fail with “Operation not permitted”.") {
+                Button(model.hasFullDiskAccess ? "Open Settings" : "Grant Access…") { model.openPrivacySettings("Privacy_AllFiles") }
+            }
+
+            if !model.hasFullDiskAccess {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("How to turn it on").font(.headline)
+                    Text("1. Click **Grant Access…**. System Settings opens at Full Disk Access.")
+                    Text("2. Switch on **Hierarchy Size**. If it isn't listed, press **+** and pick it from Applications.")
+                    Text("3. Come back and click **Relaunch** so the change takes effect.")
+                }
+                .font(.callout)
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+            }
+
+            row(granted: nil,
+                title: "Control Finder (Empty Trash)",
+                detail: "Used only when you click “Empty” on the Trash. macOS asks once the first time.") {
+                Button("Open Settings") { model.openPrivacySettings("Privacy_Automation") }
+            }
+
+            row(granted: nil,
+                title: "Administrator",
+                detail: "Some files belong to the system. When a delete needs it, Hierarchy Size asks for your password once for that delete. Files protected by System Integrity Protection can never be deleted, by design.") {
+                EmptyView()
+            }
+
+            Spacer()
+            HStack {
+                Button { model.refreshTrash() } label: { Label("Check Again", systemImage: "arrow.clockwise") }
+                Spacer()
+                Button("Relaunch Hierarchy Size") { model.relaunch() }
+            }
+        }
+        .padding(22)
+        .frame(width: 560, height: 520)
+        .onAppear { model.refreshTrash() }
+    }
+
+    private func row<B: View>(granted: Bool?, title: String, detail: String, @ViewBuilder button: () -> B) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: granted == nil ? "info.circle" : granted! ? "checkmark.circle.fill" : "xmark.circle.fill")
+                .font(.title2)
+                .foregroundStyle(granted == nil ? Color.secondary : granted! ? Color.green : Color.orange)
+            VStack(alignment: .leading, spacing: 3) {
+                HStack {
+                    Text(title).font(.headline)
+                    if let g = granted {
+                        Text(g ? "On" : "Off").font(.caption.bold())
+                            .padding(.horizontal, 6).padding(.vertical, 1)
+                            .background((g ? Color.green : Color.orange).opacity(0.2), in: Capsule())
+                    }
+                }
+                Text(detail).font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
+            button()
         }
     }
 }
