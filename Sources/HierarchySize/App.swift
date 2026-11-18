@@ -32,6 +32,8 @@ struct HierarchySizeApp: App {
                 Button("Enclosing Folder") { model.goUp() }.keyboardShortcut(.upArrow, modifiers: .command)
                 Button("Top of Scan") { if let r = model.root { model.setFocus(r) } }
                     .keyboardShortcut(.upArrow, modifiers: [.command, .shift])
+                Button("Hidden Space…") { model.showHiddenSpace = true }
+                    .keyboardShortcut("h", modifiers: [.command, .shift])
                 Divider()
                 Button("Reveal Selection in Finder") { if let s = model.selection { model.reveal(s) } }
                     .keyboardShortcut("r", modifiers: [.command, .option])

@@ -47,6 +47,9 @@ final class AppModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var searchText = "" { didSet { runSearch() } }
     @Published var searchResults: [FileNode] = []
+    @Published var showHiddenSpace = false
+    @Published var hiddenReport: HiddenSpaceReport?
+    @Published var hiddenLoading = false
     @Published var sizeMode: SizeMode = .allocated {
         didSet { applySort(); recomputeStats() }
     }

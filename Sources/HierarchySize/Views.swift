@@ -67,6 +67,9 @@ struct ContentView: View {
                 Text("\(n.size(model.sizeMode).bytesString)\(n.isDirectory ? " in \(n.fileCount.formatted()) files" : "") will be moved to the Trash. You can restore it from the Trash.")
             }
         }
+        .sheet(isPresented: $model.showHiddenSpace) {
+            HiddenSpaceView().environmentObject(model)
+        }
         .alert("Error", isPresented: Binding(get: { model.errorMessage != nil }, set: { if !$0 { model.errorMessage = nil } })) {
             Button("OK") { model.errorMessage = nil }
         } message: { Text(model.errorMessage ?? "") }
@@ -129,6 +132,9 @@ struct SidebarView: View {
                     Button { model.scan(v.url) } label: { VolumeRow(volume: v) }
                         .buttonStyle(.plain)
                 }
+                Button { model.showHiddenSpace = true } label: { Label("Hidden Space…", systemImage: "eye.slash") }
+                    .buttonStyle(.plain)
+                    .help("Snapshots, system volumes, swap and disk images")
             }
             Section("Places") {
                 ForEach(places, id: \.0) { p in
