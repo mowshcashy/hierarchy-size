@@ -27,6 +27,9 @@ struct HierarchySizeApp: App {
                 Button("Rescan") { model.rescan() }.keyboardShortcut("r")
                 Divider()
                 Button("Export as CSV…") { model.exportCSV() }.keyboardShortcut("e")
+                Divider()
+                Button(AppModel.isRoot ? "Running as Administrator" : "Run as Administrator…") { model.runAsAdministrator() }
+                    .disabled(AppModel.isRoot)
             }
             CommandMenu("Go") {
                 Button("Enclosing Folder") { model.goUp() }.keyboardShortcut(.upArrow, modifiers: .command)

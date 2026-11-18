@@ -56,6 +56,7 @@ final class AppModel: ObservableObject {
     @Published var trashCount = 0
     @Published var hasFullDiskAccess = false
     @Published var showPermissions = false
+    @Published var showAdminPrompt = false
     @Published var sizeMode: SizeMode = .allocated {
         didSet { applySort(); recomputeStats() }
     }
@@ -70,6 +71,9 @@ final class AppModel: ObservableObject {
     init() {
         refreshVolumes()
         refreshTrash()
+        if !Self.isRoot && !UserDefaults.standard.bool(forKey: Self.skipAdminPromptKey) {
+            showAdminPrompt = true
+        }
         // `open -a "Hierarchy Size" --args /some/folder` scans that folder on launch.
         if let arg = CommandLine.arguments.dropFirst().first(where: { !$0.hasPrefix("-") }) {
             var isDir: ObjCBool = false
@@ -231,7 +235,11 @@ final class AppModel: ObservableObject {
         guard let node = pendingTrash else { return }
         pendingTrash = nil
         do {
-            try FileManager.default.trashItem(at: node.url, resultingItemURL: nil)
+            if Self.isRoot {
+                try Self.moveToUserTrash(node.url)
+            } else {
+                try FileManager.default.trashItem(at: node.url, resultingItemURL: nil)
+            }
             removeFromTree(node)
         } catch {
             errorMessage = "Couldn't move “\(node.name)” to the Trash: \(error.localizedDescription)"
@@ -298,7 +306,7 @@ final class AppModel: ObservableObject {
     /// Never offer permanent deletion of the system or of top-level folders.
     static func isSafeToDelete(_ url: URL) -> Bool {
         let p = url.standardizedFileURL.path
-        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let home = AppModel.userHome.path
         let blocked = ["/", "/System", "/Library", "/Applications", "/Users", "/private", "/usr", "/bin", "/sbin",
                        "/etc", "/var", "/Volumes", "/opt", home, home + "/Library", home + "/Documents",
                        home + "/Desktop", home + "/Downloads", home + "/Pictures", home + "/Movies", home + "/Music"]
@@ -311,7 +319,7 @@ final class AppModel: ObservableObject {
 
     func refreshTrash() {
         Task.detached(priority: .utility) {
-            let trash = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".Trash")
+            let trash = AppModel.userHome.appendingPathComponent(".Trash")
             var total: Int64 = 0
             var readable = true
             var count = 0
@@ -335,7 +343,7 @@ final class AppModel: ObservableObject {
 
     /// Full Disk Access is granted when TCC-protected locations can be listed.
     nonisolated static func hasFullDiskAccess() -> Bool {
-        let home = FileManager.default.homeDirectoryForCurrentUser
+        let home = AppModel.userHome
         let probes = [home.appendingPathComponent("Library/Safari"),
                       home.appendingPathComponent("Library/Mail"),
                       home.appendingPathComponent(".Trash"),
@@ -348,6 +356,17 @@ final class AppModel: ObservableObject {
     }
 
     func emptyTrash() {
+        if Self.isRoot {
+            // Finder belongs to the normal user, so empty that user's Trash directly.
+            let trash = Self.userHome.appendingPathComponent(".Trash")
+            var failed = 0
+            for item in (try? FileManager.default.contentsOfDirectory(at: trash, includingPropertiesForKeys: nil)) ?? [] {
+                do { try FileManager.default.removeItem(at: item) } catch { failed += 1 }
+            }
+            if failed > 0 { errorMessage = "\(failed) items in the Trash couldn't be deleted. macOS protects them." }
+            refreshTrash(); refreshVolumes()
+            return
+        }
         var err: NSDictionary?
         NSAppleScript(source: "tell application \"Finder\" to empty trash")?.executeAndReturnError(&err)
         if let err, (err[NSAppleScript.errorNumber] as? Int) != -128 {
@@ -360,6 +379,50 @@ final class AppModel: ObservableObject {
         if let u = URL(string: "x-apple.systempreferences:com.apple.preference.security?\(anchor)") {
             NSWorkspace.shared.open(u)
         }
+    }
+
+    // MARK: Administrator mode
+
+    nonisolated static let isRoot = getuid() == 0
+
+    /// The real user's home, also when running as root (passed in by `runAsAdministrator`).
+    nonisolated static var userHome: URL {
+        if isRoot, let h = ProcessInfo.processInfo.environment["HS_USER_HOME"], !h.isEmpty {
+            return URL(fileURLWithPath: h)
+        }
+        return FileManager.default.homeDirectoryForCurrentUser
+    }
+
+    nonisolated static func moveToUserTrash(_ url: URL) throws {
+        let trash = userHome.appendingPathComponent(".Trash")
+        let base = url.deletingPathExtension().lastPathComponent
+        let ext = url.pathExtension
+        var dest = trash.appendingPathComponent(url.lastPathComponent)
+        var i = 2
+        while FileManager.default.fileExists(atPath: dest.path) {
+            dest = trash.appendingPathComponent(ext.isEmpty ? "\(base) \(i)" : "\(base) \(i).\(ext)")
+            i += 1
+        }
+        try FileManager.default.moveItem(at: url, to: dest)
+    }
+
+    static let skipAdminPromptKey = "skipAdminPrompt"
+
+    /// Relaunches Hierarchy Size as root after one password prompt, then quits this copy.
+    func runAsAdministrator() {
+        guard !Self.isRoot, let bin = Bundle.main.executablePath else { return }
+        func q(_ s: String) -> String { "'" + s.replacingOccurrences(of: "'", with: "'\\''") + "'" }
+        let cmd = "HS_USER_HOME=\(q(Self.userHome.path)) \(q(bin)) > /dev/null 2>&1 &"
+        let escaped = cmd.replacingOccurrences(of: "\\", with: "\\\\").replacingOccurrences(of: "\"", with: "\\\"")
+        var err: NSDictionary?
+        NSAppleScript(source: "do shell script \"\(escaped)\" with administrator privileges")?.executeAndReturnError(&err)
+        if let err {
+            if (err[NSAppleScript.errorNumber] as? Int) != -128 {
+                errorMessage = "Couldn't start as administrator: \(err[NSAppleScript.errorMessage] as? String ?? "unknown error")"
+            }
+            return
+        }
+        NSApp.terminate(nil)
     }
 
     /// Relaunch so newly granted permissions take effect.

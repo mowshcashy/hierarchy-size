@@ -89,6 +89,13 @@ struct ContentView: View {
         } message: {
             Text("Some items in “\(model.pendingAdminDelete?.name ?? "")” belong to the system or another user. macOS will ask for your password to delete them.")
         }
+        .alert("Run Hierarchy Size as Administrator?", isPresented: $model.showAdminPrompt) {
+            Button("Run as Administrator") { model.runAsAdministrator() }
+            Button("Continue as \(NSUserName())", role: .cancel) {}
+            Button("Don't Ask Again") { UserDefaults.standard.set(true, forKey: AppModel.skipAdminPromptKey) }
+        } message: {
+            Text("As administrator (superuser) Hierarchy Size can read and delete files that belong to the system or other users, without asking for your password on every delete.\n\nYou can switch later from File › Run as Administrator.")
+        }
         .sheet(isPresented: $model.showPermissions) {
             PermissionsView().environmentObject(model)
         }
@@ -142,7 +149,7 @@ struct SidebarView: View {
 
     private var places: [(String, String, URL)] {
         let fm = FileManager.default
-        let home = fm.homeDirectoryForCurrentUser
+        let home = AppModel.userHome
         return [
             ("Home", "house", home),
             ("Desktop", "menubar.dock.rectangle", home.appendingPathComponent("Desktop")),
@@ -367,6 +374,10 @@ struct StatusBar: View {
                 Text("Scanned in \(model.scanDuration.formatted(.number.precision(.fractionLength(1)))) s")
             }
             Spacer()
+            if AppModel.isRoot {
+                Label("Administrator", systemImage: "person.badge.key.fill")
+                    .foregroundStyle(.orange).help("Running as superuser")
+            }
             if model.scanErrors > 0 {
                 Button {
                     model.showPermissions = true
@@ -697,8 +708,14 @@ struct PermissionsView: View {
 
             row(granted: nil,
                 title: "Administrator",
-                detail: "Some files belong to the system. When a delete needs it, Hierarchy Size asks for your password once for that delete. Files protected by System Integrity Protection can never be deleted, by design.") {
-                EmptyView()
+                detail: AppModel.isRoot
+                    ? "Running as administrator (superuser). Files that belong to the system or other users can be deleted without extra prompts. Files protected by System Integrity Protection can never be deleted, by design."
+                    : "Run as administrator to delete files that belong to the system or other users without a password prompt each time. Files protected by System Integrity Protection can never be deleted, by design.") {
+                if AppModel.isRoot {
+                    Text("Active").font(.callout.bold()).foregroundStyle(.orange)
+                } else {
+                    Button("Run as Administrator") { model.runAsAdministrator() }
+                }
             }
 
             Spacer()

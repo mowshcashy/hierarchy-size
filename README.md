@@ -1,85 +1,60 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="Hierarchy Size — See exactly where your Mac's storage went." width="100%">
+  <img src="assets/banner.svg" alt="Hierarchy Size, a free disk space analyzer for Mac that shows what is taking up storage" width="100%">
 </p>
+
+<h1 align="center">Hierarchy Size: Free Disk Space Analyzer for Mac</h1>
+
+<p align="center"><b>The free, open-source TreeSize alternative for macOS.</b> See what's taking up space on your Mac, find large files and folders, and free up storage in minutes.</p>
 
 <p align="center">
-  <a href="../../releases/latest"><img src="https://img.shields.io/badge/Download-macOS%2014%2B-3F99F2?style=for-the-badge&logo=apple&logoColor=white" alt="Download for macOS"></a>
-  <img src="https://img.shields.io/badge/Swift-SwiftUI-F28C40?style=for-the-badge&logo=swift&logoColor=white" alt="Swift / SwiftUI">
+  <a href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip"><img src="https://img.shields.io/badge/Download%20free-macOS%2014%2B-3F99F2?style=for-the-badge&logo=apple&logoColor=white" alt="Download Hierarchy Size for Mac"></a>
+  <a href="https://mowshcashy.github.io/hierarchy-size/"><img src="https://img.shields.io/badge/Website-hierarchy--size-22336B?style=for-the-badge" alt="Hierarchy Size website"></a>
   <img src="https://img.shields.io/badge/License-MIT-40BF99?style=for-the-badge" alt="MIT License">
+  <img src="https://img.shields.io/badge/Apple%20Silicon%20%2B%20Intel-Universal-F28C40?style=for-the-badge" alt="Universal app for Apple Silicon and Intel Macs">
 </p>
-
-<h3 align="center">“Your disk is almost full.” — Now you'll know why in seconds.</h3>
-
-**Hierarchy Size** is a fast, native disk space analyzer for macOS. Point it at any folder or drive and it instantly shows you which folders and files are eating your storage — as a sortable tree, a colorful treemap, and clear charts. Find the culprits, clean up, and get your gigabytes back.
-
-No subscriptions. No accounts. No tracking. Just answers.
 
 ---
 
-## ✨ Why Hierarchy Size?
+## What is Hierarchy Size?
+
+**Hierarchy Size is a free, open-source disk space analyzer for macOS.** It scans any folder or drive and shows which folders and files use the most storage, as a sorted folder tree, an interactive treemap and charts by file type and age. It also reveals space other tools miss, such as APFS snapshots, swap memory, system volumes and mounted disk images, and lets you delete what you don't need, safely.
+
+- **Platform:** macOS 14 Sonoma or later, Apple Silicon and Intel (universal app)
+- **Price:** free, MIT license, no ads, no account, no tracking
+- **Language:** Swift and SwiftUI, 100% native
+- **Use it for:** "Storage almost full" warnings, finding large files on Mac, cleaning caches, understanding "System Data"
+
+![Hierarchy Size tree view showing folders on a Mac sorted by size](assets/screenshot-tree.png)
+
+## Features
 
 | | |
 |---|---|
-| ⚡ **Blazing fast** | Multi-threaded scanning walks hundreds of thousands of files in seconds. |
-| 🌳 **The full hierarchy** | Every folder sorted by size, with a bar showing its share of its parent. Drill down as deep as you like. |
-| 🟦 **Treemap at a glance** | Every file is a rectangle sized by how much space it takes. Big problems jump out instantly. Double-click to zoom in. |
-| 🥧 **File types breakdown** | See how much space goes to videos, images, apps, archives, documents… down to each file extension. |
-| 🏆 **Largest files list** | The 250 biggest files under the current folder, ready to reveal or remove. |
-| 📅 **File age report** | Discover gigabytes of files you haven't touched in years. |
-| 🔍 **Instant search** | Find any file or folder by name across the whole scan. |
-| 🗑️ **Clean up safely** | Move items to the Trash right from the app — sizes update live, and everything stays recoverable. |
-| 📤 **Export to CSV** | Take a full report to Excel, Numbers or Google Sheets. |
-| 💾 **Drives overview** | Every mounted drive with used / free space at a glance. |
-| 👻 **Hidden Space** | Finally see the space no other analyzer shows: snapshots, swap memory, system volumes, Preboot and mounted disk images. Delete Time Machine snapshots safely in one click. |
-| 🧮 **Size on disk vs file size** | Switch between real allocated space and logical file size. |
-| 🍎 **100% native** | Built with Swift & SwiftUI. Light, fast, and feels at home on your Mac — dark mode included. |
+| ⚡ **Fast scanning** | Multi-threaded scan reads hundreds of thousands of files in seconds. |
+| 🌳 **Folder tree by size** | Every folder sorted largest first, with a bar showing its share of its parent. Expand as deep as you like. |
+| 🟦 **Treemap** | Each file is a rectangle sized by the space it uses, so the biggest space hogs stand out instantly. Double-click to zoom. |
+| 🥧 **File types** | Space by category (video, images, apps, archives, documents, code) and by every file extension. |
+| 🏆 **Largest files** | The 250 biggest files in the current folder, ready to reveal in Finder or delete. |
+| 📅 **File age** | Find gigabytes of files you haven't touched in years. |
+| 👻 **Hidden Space** | See APFS snapshots, swap memory (VM), Preboot, Recovery, purgeable space and mounted disk images. Delete Time Machine local snapshots safely. |
+| 🔐 **Run as Administrator** | Optional superuser mode to analyze and delete files owned by the system or other users. |
+| 🗑️ **Safe cleanup** | Move to Trash, Delete Immediately, or Empty Trash right from the app. System folders are protected. |
+| 🔍 **Search** | Find any file or folder by name across the whole scan. |
+| 📤 **CSV export** | Export a full report to Excel, Numbers or Google Sheets. |
+| 💾 **Drives overview** | Every mounted drive with used and free space. |
 
-## 📸 Screenshots
+![Treemap of a Mac disk in Hierarchy Size, each rectangle sized by file size](assets/screenshot-treemap.png)
 
-**Tree view** — every folder, sorted by size
+![Hierarchy Size file types chart showing storage by category and extension](assets/screenshot-types.png)
 
-![Tree view](assets/screenshot-tree.png)
+## Download and install
 
-**Treemap** — see your whole disk at once
-
-![Treemap](assets/screenshot-treemap.png)
-
-**File types** — what kind of data fills your drive
-
-![File types](assets/screenshot-types.png)
-
-## 🚀 Get it
-
-1. Download **Hierarchy-Size-1.1.1.zip** from the [latest release](../../releases/latest).
+1. **[Download Hierarchy-Size.zip](https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip)** (about 1.5 MB).
 2. Unzip it and drag **Hierarchy Size** into your **Applications** folder.
-3. The first time, **right-click the app → Open** (it isn't notarized by Apple yet).
+3. The first time, **right-click the app › Open** (it isn't notarized by Apple yet).
+4. Optional: give it **Full Disk Access** from the app's **Permissions** screen to scan everything.
 
-> **Tip:** to scan protected places like Mail or other users' folders, give the app **Full Disk Access** in *System Settings → Privacy & Security → Full Disk Access*. The app shows a one-click shortcut if anything couldn't be read.
-
-**Requirements:** macOS 14 Sonoma or later, Apple Silicon or Intel.
-
-## ⌨️ Shortcuts
-
-| Shortcut | Action |
-|---|---|
-| ⌘O | Scan a folder |
-| ⌘R | Rescan |
-| ⌘↑ | Go to the enclosing folder |
-| ⌘⇧H | Hidden Space |
-| ⌘1 – ⌘5 | Tree · Treemap · File Types · Largest Files · File Age |
-| ⌘⌥R | Reveal selection in Finder |
-| ⌘⌫ | Move selection to Trash |
-| ⌘E | Export as CSV |
-
-You can also drag any folder onto the window, or launch it from Terminal:
-
-```bash
-open -a "Hierarchy Size" --args ~/Downloads
-```
-
-## 🛠️ Build from source
-
-Only the Xcode Command Line Tools are needed:
+Or build it yourself, with only the Xcode Command Line Tools:
 
 ```bash
 git clone https://github.com/mowshcashy/hierarchy-size.git
@@ -88,31 +63,87 @@ cd hierarchy-size
 open "build/Hierarchy Size.app"
 ```
 
-## 🔒 Privacy
+## How it compares
 
-Hierarchy Size runs entirely on your Mac. It never uploads, collects or sends anything — it has no network code at all.
+| | Hierarchy Size | DaisyDisk | GrandPerspective | OmniDiskSweeper | TreeSize / WinDirStat |
+|---|---|---|---|---|---|
+| Runs on macOS | ✅ | ✅ | ✅ | ✅ | ❌ Windows only |
+| Free | ✅ | ❌ Paid | ✅ | ✅ | Varies |
+| Open source | ✅ MIT | ❌ | ✅ | ❌ | Varies |
+| Sorted folder tree | ✅ | ✅ | ❌ | ✅ | ✅ |
+| Treemap | ✅ | Sunburst | ✅ | ❌ | ✅ |
+| File types and file age reports | ✅ | ❌ | ❌ | ❌ | Varies |
+| Snapshots, swap and disk images | ✅ | Partly | ❌ | ❌ | ❌ |
+
+## FAQ
+
+### How do I see what is taking up space on my Mac?
+Open Hierarchy Size and click **Macintosh HD** (or any folder). In a few seconds you'll see every folder sorted by size. Expand the biggest ones, or switch to **Treemap** to spot large files visually.
+
+### Is there a TreeSize for Mac?
+TreeSize and WinDirStat are Windows apps. **Hierarchy Size** brings the same idea to macOS: a folder tree sorted by size, percentages of the parent folder, file type reports, top files and CSV export, for free.
+
+### What is "System Data" on Mac and how do I reduce it?
+"System Data" usually includes caches, logs, APFS snapshots, swap memory, iOS simulator runtimes and app support files. Open **Go › Hidden Space** in Hierarchy Size to see snapshots, swap and disk images, then scan `~/Library/Caches` and `~/Library/Application Support` to find the rest.
+
+### How do I find large files on my Mac?
+Scan a folder, then open the **Largest Files** tab. It lists the 250 biggest files with their location. Right-click any file to reveal it in Finder or delete it.
+
+### I deleted files but my free space didn't change. Why?
+Deleted files stay in the Trash until it's emptied, and APFS snapshots can keep deleted data. Use **Empty** next to the Trash in the sidebar, or **Delete Immediately**, and check **Hidden Space** for snapshots.
+
+### Is it safe to delete ~/Library/Caches?
+Usually yes. Caches are rebuilt automatically. Quit the apps first, then delete their cache folders. Hierarchy Size blocks deleting top-level system folders.
+
+### Is Hierarchy Size safe and private?
+Yes. It runs only on your Mac, has no network code, collects nothing, and its full source code is in this repository.
+
+### Does it work on Apple Silicon (M1, M2, M3, M4) and Intel Macs?
+Yes. It's a universal app for macOS 14 Sonoma and later.
+
+## Keyboard shortcuts
+
+| Shortcut | Action |
+|---|---|
+| ⌘O | Scan a folder |
+| ⌘R | Rescan |
+| ⌘↑ | Enclosing folder |
+| ⌘1 – ⌘5 | Tree · Treemap · File Types · Largest Files · File Age |
+| ⌘⇧H | Hidden Space |
+| ⌘⌥R | Reveal selection in Finder |
+| ⌘⌫ / ⌘⌥⌫ | Move to Trash / Delete Immediately |
+| ⌘E | Export as CSV |
+
+Scan a folder from Terminal: `open -a "Hierarchy Size" --args ~/Downloads`
 
 ---
 
 <div dir="rtl">
 
-## 🇸🇦 بالعربي
+## بالعربي: برنامج تحليل مساحة الماك مجاناً
 
-**Hierarchy Size** تطبيق ماك سريع يوريك وين راحت مساحة جهازك. اختر أي مجلد أو قرص، وخلال ثواني تشوف أكبر المجلدات والملفات بشجرة مرتبة، وخريطة ملونة، ورسوم بيانية واضحة.
+**Hierarchy Size** برنامج مجاني ومفتوح المصدر للماك، يوريك **وش اللي ماخذ مساحة جهازك**. هو بديل TreeSize للماك: تختار أي مجلد أو قرص، وخلال ثواني تشوف أكبر المجلدات والملفات مرتبة، مع خريطة ملونة ورسوم بيانية.
 
-- ⚡ مسح سريع جداً لآلاف الملفات
-- 🌳 شجرة المجلدات مرتبة حسب الحجم مع نسبة كل مجلد
-- 🟦 خريطة مربعات (Treemap) توضح الملفات الكبيرة فوراً
-- 🥧 تحليل حسب نوع الملف: فيديو، صور، تطبيقات، أرشيف…
-- 🏆 قائمة أكبر الملفات و📅 تقرير عمر الملفات
-- 👻 المساحة المخفية: اللقطات، ذاكرة التبديل، أجزاء النظام وملفات الأقراص
-- 🗑️ حذف آمن لسلة المهملات، وتصدير CSV
+- ⚡ مسح سريع لآلاف الملفات
+- 🌳 شجرة المجلدات مرتبة حسب الحجم، مع نسبة كل مجلد من المجلد اللي فوقه
+- 🟦 خريطة مربعات (Treemap) توضّح الملفات الكبيرة فوراً
+- 🥧 تحليل حسب نوع الملف، وقائمة أكبر الملفات، وتقرير عمر الملفات
+- 👻 المساحة المخفية: اللقطات، ذاكرة التبديل، أجزاء النظام، وملفات الأقراص
+- 🔐 تشغيل كمسؤول (Administrator) لحذف ملفات النظام
+- 🗑️ تفريغ سلة المهملات، والحذف النهائي، وحماية مجلدات النظام
 - 🔒 يشتغل على جهازك فقط، بدون إنترنت وبدون تتبّع
 
-**التحميل:** نزّل الملف من [آخر إصدار](../../releases/latest)، انقل التطبيق لمجلد Applications، وأول مرة افتحه بكليك يمين ← Open.
+**أسئلة شائعة:**
+- **كيف أعرف وش ماخذ مساحة الماك؟** افتح البرنامج واضغط Macintosh HD، وبتطلع لك المجلدات مرتبة من الأكبر.
+- **هل فيه TreeSize للماك؟** TreeSize للويندوز بس، و Hierarchy Size هو البديل المجاني للماك.
+- **حذفت ملفات والمساحة ما زادت؟** فرّغ سلة المهملات من زر Empty، أو استخدم "Delete Immediately".
+
+**التحميل:** [نزّل البرنامج مجاناً](https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip)، انقله لمجلد Applications، وأول مرة افتحه بكليك يمين ثم Open.
 
 </div>
 
 ---
 
-<p align="center">Made with ❤️ for Mac users who are tired of “Storage Almost Full”.<br>If it helped you, give it a ⭐!</p>
+<p align="center">Made for Mac users who are tired of “Your disk is almost full”.<br>If Hierarchy Size helped you, please ⭐ the repo so more people can find it.</p>
+
+<p align="center"><sub>Keywords: disk space analyzer mac, disk usage mac, free up space mac, storage analyzer macOS, find large files mac, TreeSize for Mac, WinDirStat for Mac, DaisyDisk alternative, GrandPerspective alternative, System Data mac, treemap, macOS cleaner</sub></p>

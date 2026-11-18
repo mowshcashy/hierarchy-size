@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hierarchy Size: Free Disk Space Analyzer for Mac (TreeSize Alternative)</title>
+<meta name="description" content="Hierarchy Size is a free, open-source disk space analyzer for macOS. See what's taking up space on your Mac, find large files, reduce System Data and free up storage. A TreeSize alternative for Mac.">
+<meta name="keywords" content="disk space analyzer mac, free up space on mac, find large files mac, TreeSize for Mac, WinDirStat mac, DaisyDisk alternative, storage analyzer macOS, System Data mac, disk usage mac">
+<meta name="author" content="mowshcashy">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://mowshcashy.github.io/hierarchy-size/">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0F1733">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hierarchy Size">
+<meta property="og:title" content="Hierarchy Size: Free Disk Space Analyzer for Mac">
+<meta property="og:description" content="See exactly what's taking up space on your Mac. Folder tree, treemap, largest files, hidden space. Free and open source.">
+<meta property="og:url" content="https://mowshcashy.github.io/hierarchy-size/">
+<meta property="og:image" content="https://mowshcashy.github.io/hierarchy-size/assets/og-image.jpg">
+<meta property="og:image:alt" content="Treemap of a Mac disk in Hierarchy Size">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hierarchy Size: Free Disk Space Analyzer for Mac">
+<meta name="twitter:description" content="See exactly what's taking up space on your Mac. Free and open source.">
+<meta name="twitter:image" content="https://mowshcashy.github.io/hierarchy-size/assets/og-image.jpg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Hierarchy Size",
+      "alternateName": ["HierarchySize", "TreeSize alternative for Mac"],
+      "description": "Free, open-source disk space analyzer for macOS. Shows which folders and files use the most storage as a sorted tree, treemap and charts, reveals snapshots, swap and disk images, and lets you delete what you don't need.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "macOS 14 or later",
+      "processorRequirements": "Apple Silicon or Intel",
+      "softwareVersion": "1.2",
+      "license": "https://opensource.org/licenses/MIT",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "downloadUrl": "https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip",
+      "url": "https://mowshcashy.github.io/hierarchy-size/",
+      "codeRepository": "https://github.com/mowshcashy/hierarchy-size",
+      "image": "https://mowshcashy.github.io/hierarchy-size/assets/og-image.jpg",
+      "screenshot": [
+        "https://mowshcashy.github.io/hierarchy-size/assets/screenshot-tree.png",
+        "https://mowshcashy.github.io/hierarchy-size/assets/screenshot-treemap.png",
+        "https://mowshcashy.github.io/hierarchy-size/assets/screenshot-types.png"
+      ],
+      "featureList": [
+        "Folder tree sorted by size with percentage of parent",
+        "Interactive treemap",
+        "Storage by file type and extension",
+        "Largest files list",
+        "File age report",
+        "Hidden Space: APFS snapshots, swap memory, system volumes, disk images",
+        "Run as Administrator",
+        "Move to Trash, Delete Immediately, Empty Trash",
+        "Search and CSV export"
+      ],
+      "inLanguage": ["en", "ar"]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I see what is taking up space on my Mac?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Open Hierarchy Size and click Macintosh HD or any folder. Within seconds every folder is listed largest first. Expand the biggest ones or switch to the Treemap to spot large files." } },
+        { "@type": "Question", "name": "Is there a TreeSize for Mac?",
+          "acceptedAnswer": { "@type": "Answer", "text": "TreeSize and WinDirStat are Windows apps. Hierarchy Size is a free, open-source TreeSize alternative for macOS with a folder tree sorted by size, file type reports, a largest files list and CSV export." } },
+        { "@type": "Question", "name": "What is System Data on Mac and how do I reduce it?",
+          "acceptedAnswer": { "@type": "Answer", "text": "System Data usually includes caches, logs, APFS snapshots, swap memory, iOS simulator runtimes and app support files. Hierarchy Size's Hidden Space view shows snapshots, swap and disk images, and scanning ~/Library/Caches and ~/Library/Application Support finds the rest." } },
+        { "@type": "Question", "name": "Why didn't my free space increase after deleting files on Mac?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Deleted files stay in the Trash until it is emptied, and APFS snapshots can keep deleted data. Empty the Trash, use Delete Immediately, and check Hidden Space for snapshots." } },
+        { "@type": "Question", "name": "Is Hierarchy Size free and safe?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. It is free under the MIT license, runs only on your Mac, has no network code, collects no data and its source code is public on GitHub." } }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --bg: #0B1128; --bg2: #121A3A; --card: #172149; --text: #EEF2FF; --muted: #AFC3F0;
+    --blue: #3F99F2; --orange: #F28C40; --green: #40BF99; --red: #E04D66; --yellow: #E6BF40;
+    --line: rgba(175,195,240,.16);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif; }
+  a { color: #9CCBFF; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  header.nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); text-decoration: none; }
+  .brand img { width: 34px; height: 34px; }
+  .nav a.link { color: var(--muted); text-decoration: none; margin-left: 20px; font-size: 15px; }
+  .hero { text-align: center; padding: 56px 0 28px;
+    background: radial-gradient(900px 400px at 50% -10%, rgba(63,153,242,.25), transparent 70%); }
+  .hero img.logo { width: 120px; height: 120px; filter: drop-shadow(0 18px 40px rgba(63,153,242,.35)); }
+  h1 { font-size: clamp(34px, 6vw, 60px); line-height: 1.08; margin: 18px 0 14px; letter-spacing: -.02em; }
+  .hero p.lead { font-size: clamp(18px, 2.4vw, 22px); color: var(--muted); max-width: 720px; margin: 0 auto 28px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; border-radius: 14px;
+    background: var(--blue); color: #fff; font-weight: 700; text-decoration: none; font-size: 18px;
+    box-shadow: 0 10px 30px rgba(63,153,242,.35); }
+  .btn.ghost { background: transparent; border: 1px solid var(--line); box-shadow: none; color: var(--text); }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .meta { color: var(--muted); font-size: 14px; margin-top: 14px; }
+  .shot { margin: 44px auto 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--line);
+    box-shadow: 0 30px 80px rgba(0,0,0,.5); max-width: 1000px; }
+  .shot img { display: block; width: 100%; height: auto; }
+  section { padding: 64px 0; }
+  h2 { font-size: clamp(26px, 4vw, 38px); margin: 0 0 10px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 30px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  .card h3 { margin: 6px 0 6px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .emoji { font-size: 26px; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+  .two img { width: 100%; border-radius: 12px; border: 1px solid var(--line); }
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; min-width: 680px; font-size: 15px; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { background: var(--bg2); }
+  td:first-child { color: var(--muted); }
+  tr:last-child td { border-bottom: 0; }
+  .hl { background: rgba(63,153,242,.1); font-weight: 600; }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px; }
+  summary { cursor: pointer; font-weight: 700; font-size: 17px; }
+  details p { color: var(--muted); margin: 10px 0 0; }
+  ol.steps { padding-left: 22px; } ol.steps li { margin: 8px 0; }
+  code { background: var(--bg2); padding: 2px 6px; border-radius: 6px; font-size: 14px; }
+  .ar { direction: rtl; text-align: right; font-family: -apple-system, "SF Arabic", "Geeza Pro", Tahoma, sans-serif; }
+  footer { border-top: 1px solid var(--line); padding: 30px 0 50px; color: var(--muted); font-size: 14px; text-align: center; }
+  @media (max-width: 600px) { .nav a.link { display: none; } section { padding: 44px 0; } .btn { width: 100%; justify-content: center; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="nav">
+    <a class="brand" href="#"><img src="assets/logo.svg" alt="Hierarchy Size logo">Hierarchy Size</a>
+    <nav>
+      <a class="link" href="#features">Features</a>
+      <a class="link" href="#compare">Compare</a>
+      <a class="link" href="#faq">FAQ</a>
+      <a class="link" href="https://github.com/mowshcashy/hierarchy-size">GitHub</a>
+    </nav>
+  </header>
+</div>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <img class="logo" src="assets/logo.svg" alt="Hierarchy Size app icon">
+      <h1>See what's taking up<br>space on your Mac.</h1>
+      <p class="lead"><strong>Hierarchy Size</strong> is a free, open-source disk space analyzer for macOS. A TreeSize alternative for Mac that finds large files and folders in seconds.</p>
+      <div class="cta">
+        <a class="btn" href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">Download free for Mac</a>
+        <a class="btn ghost" href="https://github.com/mowshcashy/hierarchy-size">View source on GitHub</a>
+      </div>
+      <p class="meta">macOS 14+ · Apple Silicon &amp; Intel · 1.5 MB · No ads, no account, no tracking</p>
+      <div class="shot"><img src="assets/screenshot-treemap.png" alt="Hierarchy Size treemap showing what takes up space on a Mac" width="1600" height="1013"></div>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <h2>Everything you need to free up space on a Mac</h2>
+      <p class="sub">Scan any folder or drive and get answers right away.</p>
+      <div class="grid">
+        <div class="card"><div class="emoji">🌳</div><h3>Folder tree by size</h3><p>Every folder sorted largest first, with its share of the parent folder.</p></div>
+        <div class="card"><div class="emoji">🟦</div><h3>Treemap</h3><p>Every file is a rectangle sized by its space. Big files jump out instantly.</p></div>
+        <div class="card"><div class="emoji">🏆</div><h3>Largest files</h3><p>The 250 biggest files, ready to reveal in Finder or delete.</p></div>
+        <div class="card"><div class="emoji">🥧</div><h3>File types</h3><p>Video, images, apps, archives, documents. Down to every extension.</p></div>
+        <div class="card"><div class="emoji">📅</div><h3>File age</h3><p>Find gigabytes you haven't touched in years.</p></div>
+        <div class="card"><div class="emoji">👻</div><h3>Hidden Space</h3><p>APFS snapshots, swap memory, system volumes and disk images: the space behind “System Data”.</p></div>
+        <div class="card"><div class="emoji">🔐</div><h3>Run as Administrator</h3><p>Optional superuser mode to clean files that belong to the system.</p></div>
+        <div class="card"><div class="emoji">🗑️</div><h3>Safe cleanup</h3><p>Move to Trash, Delete Immediately, Empty Trash. System folders stay protected.</p></div>
+        <div class="card"><div class="emoji">🔒</div><h3>Private by design</h3><p>Runs only on your Mac. No network code, no data collected. Open source.</p></div>
+      </div>
+      <div class="two" style="margin-top:28px">
+        <img src="assets/screenshot-tree.png" alt="Folder tree sorted by size in Hierarchy Size for Mac" loading="lazy" width="1600" height="1013">
+        <img src="assets/screenshot-types.png" alt="Storage by file type chart in Hierarchy Size" loading="lazy" width="1600" height="1013">
+      </div>
+    </div>
+  </section>
+
+  <section id="compare">
+    <div class="wrap">
+      <h2>Hierarchy Size vs other disk analyzers</h2>
+      <p class="sub">Looking for TreeSize or WinDirStat on a Mac? Here's how the options stack up.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th></th><th>Hierarchy Size</th><th>DaisyDisk</th><th>GrandPerspective</th><th>OmniDiskSweeper</th><th>TreeSize / WinDirStat</th></tr></thead>
+          <tbody>
+            <tr><td>Runs on macOS</td><td class="hl">✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌ Windows only</td></tr>
+            <tr><td>Free</td><td class="hl">✅</td><td>❌ Paid</td><td>✅</td><td>✅</td><td>Varies</td></tr>
+            <tr><td>Open source</td><td class="hl">✅ MIT</td><td>❌</td><td>✅</td><td>❌</td><td>Varies</td></tr>
+            <tr><td>Sorted folder tree</td><td class="hl">✅</td><td>✅</td><td>❌</td><td>✅</td><td>✅</td></tr>
+            <tr><td>Treemap</td><td class="hl">✅</td><td>Sunburst</td><td>✅</td><td>❌</td><td>✅</td></tr>
+            <tr><td>File type &amp; age reports</td><td class="hl">✅</td><td>❌</td><td>❌</td><td>❌</td><td>Varies</td></tr>
+            <tr><td>Snapshots, swap, disk images</td><td class="hl">✅</td><td>Partly</td><td>❌</td><td>❌</td><td>❌</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="install">
+    <div class="wrap">
+      <h2>Install in 30 seconds</h2>
+      <ol class="steps">
+        <li><a href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">Download Hierarchy-Size.zip</a>.</li>
+        <li>Unzip it and drag <strong>Hierarchy Size</strong> into <strong>Applications</strong>.</li>
+        <li>The first time, right-click the app and choose <strong>Open</strong>.</li>
+        <li>Optional: turn on <strong>Full Disk Access</strong> from the app's Permissions screen to scan everything.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2>Frequently asked questions</h2>
+      <details open><summary>How do I see what is taking up space on my Mac?</summary><p>Open Hierarchy Size and click Macintosh HD or any folder. Within seconds every folder is listed largest first. Expand the biggest ones or switch to the Treemap to spot large files.</p></details>
+      <details><summary>Is there a TreeSize for Mac?</summary><p>TreeSize and WinDirStat are Windows apps. Hierarchy Size is a free, open-source TreeSize alternative for macOS, with a folder tree sorted by size, file type reports, a largest files list and CSV export.</p></details>
+      <details><summary>What is “System Data” on Mac and how do I reduce it?</summary><p>System Data usually includes caches, logs, APFS snapshots, swap memory, iOS simulator runtimes and app support files. The Hidden Space view shows snapshots, swap and disk images. Scan <code>~/Library/Caches</code> and <code>~/Library/Application Support</code> to find the rest.</p></details>
+      <details><summary>Why didn't my free space increase after deleting files?</summary><p>Deleted files stay in the Trash until it's emptied, and APFS snapshots can keep deleted data. Empty the Trash from the sidebar, use Delete Immediately, and check Hidden Space for snapshots.</p></details>
+      <details><summary>How do I find large files on my Mac?</summary><p>Scan a folder and open the Largest Files tab. It lists the 250 biggest files with their location. Right-click to reveal in Finder or delete.</p></details>
+      <details><summary>Is it safe to delete ~/Library/Caches?</summary><p>Usually yes. Apps rebuild their caches automatically. Quit the apps first, then delete their cache folders.</p></details>
+      <details><summary>Is Hierarchy Size free, safe and private?</summary><p>Yes. It's free under the MIT license, runs only on your Mac, has no network code, collects nothing, and the source code is public on GitHub.</p></details>
+      <details><summary>Does it work on Apple Silicon and Intel Macs?</summary><p>Yes. It's a universal app for macOS 14 Sonoma and later, on M1, M2, M3, M4 and Intel Macs.</p></details>
+    </div>
+  </section>
+
+  <section id="ar" class="ar" lang="ar">
+    <div class="wrap">
+      <h2>برنامج مجاني يوريك وش ماخذ مساحة الماك</h2>
+      <p class="sub"><strong>Hierarchy Size</strong> بديل TreeSize للماك: مجاني ومفتوح المصدر. يعرض أكبر المجلدات والملفات مرتبة، مع خريطة ملونة، وأكبر الملفات، والمساحة المخفية مثل اللقطات وذاكرة التبديل، ويخليك تحذف اللي ما تحتاجه بأمان.</p>
+      <div class="cta" style="justify-content:flex-start">
+        <a class="btn" href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">حمّل البرنامج مجاناً</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    Hierarchy Size · Free disk space analyzer for macOS · <a href="https://github.com/mowshcashy/hierarchy-size">GitHub</a> · MIT License<br>
+    TreeSize, WinDirStat, DaisyDisk, GrandPerspective and OmniDiskSweeper are trademarks of their respective owners. Hierarchy Size is not affiliated with them.
+  </div>
+</footer>
+</body>
+</html>
