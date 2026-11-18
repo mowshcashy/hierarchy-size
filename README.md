@@ -50,7 +50,7 @@ No subscriptions. No accounts. No tracking. Just answers.
 
 ## 🚀 Get it
 
-1. Download **Hierarchy-Size-1.1.zip** from the [latest release](../../releases/latest).
+1. Download **Hierarchy-Size-1.1.1.zip** from the [latest release](../../releases/latest).
 2. Unzip it and drag **Hierarchy Size** into your **Applications** folder.
 3. The first time, **right-click the app → Open** (it isn't notarized by Apple yet).
 
