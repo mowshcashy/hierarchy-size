@@ -46,7 +46,32 @@ struct Scanner {
         }
         // Never descend into the hidden root aliases, whatever the scan root is.
         ex.formUnion(["/.nofollow", "/.resolve", "/.vol"])
+        // Don't descend into other mounted volumes (disk images, simulator runtimes, USB drives):
+        // their contents aren't stored in this folder, so counting them inflates sizes.
+        let rootPath = Self.normalized(root.path)
+        for v in Self.mountPoints() where v != "/" && v != "/System/Volumes/Data" && v != rootPath {
+            ex.insert(v)
+        }
         self.excluded = ex
+    }
+
+    static func normalized(_ path: String) -> String {
+        var p = path
+        while p.count > 1 && p.hasSuffix("/") { p.removeLast() }
+        return p
+    }
+
+    /// Mount points of every mounted file system, hidden ones included.
+    static func mountPoints() -> [String] {
+        var buf: UnsafeMutablePointer<statfs>?
+        let n = getmntinfo(&buf, MNT_NOWAIT)
+        guard n > 0, let buf else { return [] }
+        return (0..<Int(n)).map { i in
+            var m = buf[i].f_mntonname
+            return withUnsafePointer(to: &m) {
+                $0.withMemoryRebound(to: CChar.self, capacity: Int(MAXPATHLEN)) { normalized(String(cString: $0)) }
+            }
+        }
     }
 
     func scan(root: URL) -> FileNode {
