@@ -9,9 +9,8 @@
 <meta name="author" content="mowshcashy">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://mowshcashy.github.io/hierarchy-size/">
+<meta name="theme-color" content="#E43201">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
-<meta name="theme-color" content="#F5F0E6" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#14120F" media="(prefers-color-scheme: dark)">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Hierarchy Size">
@@ -85,327 +84,408 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Pinyon+Script&family=Inter:wght@400;500;600&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --paper: #F5F0E6;
-    --paper-2: #EDE6D8;
-    --ink: #16130F;
-    --ink-2: #4A443B;
-    --ink-3: #857C6E;
-    --rule: #16130F;
-    --hair: rgba(22,19,15,.18);
-    --accent: #C2410C;
-    --blue: #1D4ED8;
-    --serif: "Fraunces", Georgia, "Times New Roman", serif;
-    --text: "Newsreader", Georgia, serif;
-    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --red: #E43201;
+    --red-deep: #C92B00;
+    --ink: #0F0D0A;
+    --paper: #F2E6D4;
+    --paper-2: #E9DBC4;
+    --white: #FFF7EC;
+    --display: "Cormorant", "Cormorant Garamond", "Didot", Georgia, serif;
+    --script: "Pinyon Script", "Snell Roundhand", cursive;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     --arabic: "Noto Naskh Arabic", "Geeza Pro", serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #14120F; --paper-2: #1C1915; --ink: #EFE8DA; --ink-2: #C9C0B0; --ink-3: #8E8576;
-      --rule: #EFE8DA; --hair: rgba(239,232,218,.18); --accent: #F08A4B; --blue: #8AB4FF;
-    }
+    --gut: clamp(16px, 2.6vw, 40px);
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 19px/1.62 var(--text);
-    font-optical-sizing: auto; text-rendering: optimizeLegibility; }
-  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  a:hover { color: var(--accent); }
-  img { max-width: 100%; height: auto; display: block; }
-  .page { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+  html { -webkit-text-size-adjust: 100%; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  body { margin: 0; background: var(--ink); color: var(--ink); font: 400 16px/1.55 var(--sans); overflow-x: hidden; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; height: auto; }
+  sup.n { font: italic 400 .26em/1 var(--display); vertical-align: top; position: relative; top: .55em; margin-left: .12em; letter-spacing: 0; opacity: .85; }
+  .caps { font: 500 12.5px/1.6 var(--sans); letter-spacing: .02em; text-transform: uppercase; }
+  .script { font-family: var(--script); font-weight: 400; letter-spacing: 0; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-  /* Masthead */
-  .topline { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-    font: 500 11.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2);
-    padding: 16px 0 12px; }
-  .topline nav a { margin-left: 22px; text-decoration: none; }
-  .masthead { border-top: 3px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 14px 0 12px;
-    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; }
-  .masthead .title { font: 700 clamp(28px, 4.6vw, 46px)/1 var(--serif); letter-spacing: -.02em; text-align: center;
-    font-variation-settings: "opsz" 144; text-decoration: none; display: flex; align-items: center; gap: 12px; justify-content: center; }
-  .masthead .title img { width: 40px; height: 40px; }
-  .masthead .l, .masthead .r { font: 500 11px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
-  .masthead .r { text-align: right; }
-  .dateline { border-bottom: 3px double var(--rule); height: 6px; }
+  /* ───────── I. Hero ───────── */
+  .hero { position: relative; height: 100vh; min-height: 640px; background: var(--ink); }
+  .panel { position: absolute; inset: var(--gut); background: var(--red); overflow: hidden; border-radius: 2px; }
+  .bar { position: absolute; top: 0; left: 0; right: 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    padding: clamp(14px, 2.2vw, 30px) clamp(18px, 2.6vw, 40px); z-index: 5; }
+  .bar .plus { width: 28px; height: 28px; position: relative; display: block; }
+  .bar .plus::before, .bar .plus::after { content: ""; position: absolute; background: var(--ink); left: 50%; top: 50%; transform: translate(-50%,-50%); }
+  .bar .plus::before { width: 28px; height: 1.5px; } .bar .plus::after { width: 1.5px; height: 28px; }
+  .bar .logo { font: 400 clamp(30px, 3.4vw, 50px)/1 var(--script); text-decoration: none; color: var(--ink); white-space: nowrap; }
+  .bar .cta { justify-self: end; font: 600 14px/1 var(--sans); letter-spacing: .02em; text-transform: uppercase; text-decoration: none; }
+  .bar .cta:hover { color: var(--white); }
 
-  /* Hero */
-  .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; padding: 56px 0 40px; align-items: end; }
-  .kicker { font: 500 12px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--accent); margin: 0 0 22px; }
-  h1 { font: 400 clamp(52px, 8.4vw, 112px)/.92 var(--serif); letter-spacing: -.035em; margin: 0;
-    font-variation-settings: "opsz" 144, "SOFT" 30; }
-  h1 em { font-style: italic; font-weight: 300; color: var(--accent); }
-  .deck { font: 400 clamp(20px, 2.3vw, 25px)/1.42 var(--text); color: var(--ink-2); margin: 0 0 26px; font-style: italic; }
-  .byline { font: 500 12px/1.6 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3);
-    border-top: 1px solid var(--hair); padding-top: 14px; margin-bottom: 26px; }
-  .actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
-  .btn { display: inline-flex; align-items: center; gap: 12px; padding: 16px 26px; background: var(--ink); color: var(--paper);
-    font: 500 13px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--ink); }
-  .btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn .arrow { font-family: var(--serif); font-size: 20px; line-height: 0; }
-  .textlink { font: 500 13px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .names { position: absolute; left: 0; right: 0; top: clamp(84px, 11vh, 130px); text-align: center; z-index: 3; pointer-events: none;
+    font: 300 clamp(32px, 5.25vw, 104px)/1.02 var(--display); letter-spacing: -.035em; }
+  .names .line { display: block; white-space: nowrap; }
+  .names .nm { cursor: default; pointer-events: auto; transition: color .35s ease; }
+  .names .nm:hover, .names .nm.on { color: var(--white); }
+  .names .sl { font-weight: 400; opacity: .9; margin: 0 .08em 0 .12em; }
+  .names .script { font-size: 1.12em; line-height: .5; letter-spacing: -.01em; }
 
-  /* Figures */
-  figure { margin: 0; }
-  .plate { border: 1px solid var(--rule); padding: 10px; background: var(--paper-2); }
-  figcaption { font: 400 15px/1.5 var(--text); color: var(--ink-2); margin-top: 12px; display: flex; gap: 12px; }
-  figcaption b { font: 500 11px/1.9 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
-  .lead-figure { padding: 8px 0 64px; border-bottom: 1px solid var(--rule); }
+  .portrait { position: absolute; left: 50%; bottom: 0; width: min(37vw, 50vh, 580px); transform: translateX(-50%); z-index: 2;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 6%);
+    -webkit-mask-composite: source-in; mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%); }
+  .portrait img { width: 100%; }
 
-  /* Sections */
-  section { padding: 72px 0; border-bottom: 1px solid var(--rule); }
-  .sec-head { display: grid; grid-template-columns: 140px 1fr; gap: 28px; margin-bottom: 44px; align-items: baseline; }
-  .numeral { font: 300 64px/.8 var(--serif); font-style: italic; color: var(--accent); font-variation-settings: "opsz" 144; }
-  h2 { font: 400 clamp(34px, 5vw, 58px)/1 var(--serif); letter-spacing: -.025em; margin: 0; font-variation-settings: "opsz" 144; }
-  .sec-head p { font: 500 12px/1.6 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin: 14px 0 0; }
-  .body { margin-left: 168px; }
+  .ghost { position: absolute; left: 0; right: 0; bottom: -4vw; text-align: center; z-index: 0; pointer-events: none;
+    font: 400 clamp(120px, 24vw, 420px)/1 var(--script); color: rgba(15,13,10,.075); white-space: nowrap; transition: opacity .4s ease; }
 
-  .columns { column-count: 2; column-gap: 48px; column-rule: 1px solid var(--hair); }
-  .columns p { margin: 0 0 1em; hyphens: auto; text-align: justify; }
-  .dropcap::first-letter { float: left; font: 400 5.2em/.78 var(--serif); padding: .06em .1em 0 0; color: var(--accent);
-    font-variation-settings: "opsz" 144; }
+  .aside { position: absolute; top: 60%; width: min(24vw, 340px); z-index: 4; }
+  .aside.l { left: clamp(20px, 3.4vw, 60px); } .aside.r { right: clamp(20px, 3.4vw, 60px); }
+  .aside svg { width: 74px; height: 40px; display: inline-block; vertical-align: -4px; margin-right: 12px; stroke: var(--ink); fill: none; stroke-width: 1.2; }
+  .aside p { margin: 0; display: inline; }
 
-  .pull { margin: 64px 0 0 168px; padding: 30px 0; border-top: 3px solid var(--rule); border-bottom: 1px solid var(--rule); }
-  .pull blockquote { margin: 0; font: 300 clamp(28px, 3.8vw, 44px)/1.15 var(--serif); font-style: italic; letter-spacing: -.015em;
-    font-variation-settings: "opsz" 144; }
-  .pull cite { display: block; margin-top: 16px; font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; font-style: normal; color: var(--ink-3); }
+  .scrollcue { position: absolute; bottom: 18px; right: clamp(18px, 2.6vw, 40px); z-index: 5; display: flex; gap: 10px; align-items: center; }
+  .scrollcue i { display: block; width: 1px; height: 38px; background: var(--ink); transform-origin: top; animation: cue 1.8s ease-in-out infinite; }
+  @keyframes cue { 0%{transform:scaleY(0)} 50%{transform:scaleY(1)} 100%{transform:scaleY(0); transform-origin: bottom} }
 
-  /* Features index */
-  .index { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--rule); }
-  .item { padding: 26px 26px 30px 0; border-bottom: 1px solid var(--hair); }
-  .item:not(:nth-child(3n+1)) { padding-left: 26px; border-left: 1px solid var(--hair); }
-  .item .no { font: 500 11px/1 var(--mono); letter-spacing: .14em; color: var(--accent); }
-  .item h3 { font: 500 25px/1.15 var(--serif); margin: 12px 0 8px; letter-spacing: -.01em; font-variation-settings: "opsz" 72; }
-  .item p { margin: 0; font-size: 17px; color: var(--ink-2); line-height: 1.5; }
+  /* ───────── II. Manifesto ───────── */
+  .manifesto { background: var(--ink); color: var(--paper); padding: 22vh var(--gut) 24vh; }
+  .manifesto .kicker { color: var(--red); margin: 0 0 4vh; }
+  .manifesto p.big { margin: 0 auto; max-width: 1280px; font: 300 clamp(34px, 5.6vw, 96px)/1.05 var(--display); letter-spacing: -.03em; }
+  .manifesto .script { color: var(--red); font-size: 1.25em; line-height: .6; }
+  .w { display: inline-block; }
 
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 56px; }
+  /* ───────── III. Collection ───────── */
+  .collection { background: var(--paper); position: relative; }
+  .col-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; padding: 12vh var(--gut) 6vh; }
+  .col-head h2 { margin: 0; font: 300 clamp(58px, 10vw, 184px)/.88 var(--display); letter-spacing: -.045em; }
+  .col-head h2 .script { font-size: 1.1em; color: var(--red); }
+  .col-head .caps { max-width: 360px; }
+  .track { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 5vw var(--gut); padding: 0 var(--gut) 14vh; }
+  .plate { margin: 0; }
+  .plate .frame { overflow: hidden; aspect-ratio: 4 / 5; background: var(--paper-2); }
+  .plate .frame img { width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+  .plate .frame.shot { background: var(--ink); padding: 7% 6%; display: flex; align-items: center; }
+  .plate .frame.shot img { height: auto; object-fit: contain; box-shadow: 0 30px 60px rgba(0,0,0,.45); }
+  .plate .meta { display: grid; grid-template-columns: auto 1fr; gap: 18px; margin-top: 18px; align-items: baseline; }
+  .plate .no { font: italic 400 15px/1 var(--display); color: var(--red); white-space: nowrap; }
+  .plate h3 { margin: 0 0 6px; font: 400 clamp(30px, 2.8vw, 46px)/1 var(--display); letter-spacing: -.03em; }
+  .plate h3 .script { font-size: 1.25em; color: var(--red); }
+  .plate p { margin: 0; max-width: 34ch; color: #4A3F33; }
 
-  /* Table */
-  .tablewrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; min-width: 720px; font-size: 16.5px; }
-  thead th { font: 500 11px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; text-align: left;
-    padding: 12px 14px; border-top: 3px solid var(--rule); border-bottom: 1px solid var(--rule); vertical-align: bottom; }
-  td { padding: 13px 14px; border-bottom: 1px solid var(--hair); }
-  td:first-child { font-style: italic; color: var(--ink-2); }
-  .us { background: color-mix(in srgb, var(--accent) 9%, transparent); font-weight: 500; }
-  tbody tr:last-child td { border-bottom: 1px solid var(--rule); }
-  .note { font: 400 14px/1.5 var(--text); font-style: italic; color: var(--ink-3); margin-top: 14px; }
+  /* horizontal mode (JS, wide screens) */
+  .is-h .collection-pin { height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+  .is-h .col-head { padding-top: 7vh; padding-bottom: 3vh; flex: none; }
+  .is-h .track { display: flex; gap: 4vw; padding: 0 var(--gut); width: max-content; flex: 1; align-items: start; }
+  .is-h .plate { width: min(26vw, 37vh); flex: none; }
+  .is-h .plate:nth-child(even) { margin-top: 5vh; }
+  .is-h .plate p { font-size: 15px; }
 
-  /* Q&A */
-  .qa { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
-  .q { padding: 22px 0 24px; border-top: 1px solid var(--hair); break-inside: avoid; }
-  .q h3 { font: 500 22px/1.25 var(--serif); margin: 0 0 8px; letter-spacing: -.005em; font-variation-settings: "opsz" 48; }
-  .q h3::before { content: "Q."; font: 500 12px/1 var(--mono); color: var(--accent); letter-spacing: .1em; margin-right: 10px; vertical-align: 3px; }
-  .q p { margin: 0; color: var(--ink-2); font-size: 17.5px; }
-  code { font: 400 .82em var(--mono); background: var(--paper-2); padding: 1px 5px; }
+  /* ───────── IV. Statement ───────── */
+  .statement { background: var(--red); padding: 18vh var(--gut) 16vh; text-align: center; overflow: hidden; position: relative; }
+  .statement h2 { margin: 0; font: 300 clamp(60px, 12.5vw, 240px)/.86 var(--display); letter-spacing: -.05em; }
+  .statement h2 .script { color: var(--white); font-size: 1.15em; letter-spacing: 0; }
+  .statement .sub { margin: 4vh auto 0; max-width: 560px; }
+  .statement .shot { margin: 9vh auto 0; max-width: 1100px; border: 1px solid rgba(15,13,10,.6); padding: clamp(8px, 1.2vw, 16px); background: rgba(255,247,236,.08); }
+  .statement .shot img { box-shadow: 0 40px 90px rgba(60,10,0,.45); }
+  .btn { display: inline-flex; gap: 14px; align-items: center; margin-top: 6vh; padding: 18px 34px; background: var(--ink); color: var(--paper);
+    font: 600 14px/1 var(--sans); letter-spacing: .04em; text-transform: uppercase; text-decoration: none; border-radius: 999px; transition: background .3s, color .3s; }
+  .btn:hover { background: var(--white); color: var(--ink); }
+  .btn em { font: 400 26px/0 var(--script); text-transform: none; letter-spacing: 0; }
 
-  /* Install */
-  .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--rule); }
-  .steps li { counter-increment: s; padding: 22px 22px 22px 0; font-size: 17.5px; }
-  .steps li + li { padding-left: 22px; border-left: 1px solid var(--hair); }
-  .steps li::before { content: counter(s, decimal-leading-zero); display: block; font: 300 46px/1 var(--serif); font-style: italic; color: var(--accent); margin-bottom: 10px; }
+  /* ───────── V. Reference (compare + Q&A) ───────── */
+  .ref { background: var(--paper); padding: 16vh var(--gut); }
+  .sec-title { display: grid; grid-template-columns: minmax(120px, 18vw) 1fr; gap: 24px; align-items: baseline; border-top: 1px solid var(--ink); padding-top: 22px; margin-bottom: 7vh; }
+  .sec-title .no { font: italic 400 clamp(40px, 5vw, 80px)/.8 var(--display); color: var(--red); }
+  .sec-title h2 { margin: 0; font: 300 clamp(44px, 6.6vw, 116px)/.95 var(--display); letter-spacing: -.04em; }
+  .sec-title h2 .script { color: var(--red); font-size: 1.15em; }
+  .tablewrap { overflow-x: auto; margin-bottom: 18vh; }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  th { font: 600 12px/1.3 var(--sans); text-transform: uppercase; letter-spacing: .04em; text-align: left; padding: 14px 12px; border-bottom: 1px solid var(--ink); vertical-align: bottom; }
+  td { font: 400 21px/1.3 var(--display); padding: 15px 12px; border-bottom: 1px solid rgba(15,13,10,.18); }
+  td:first-child { font-style: italic; }
+  .us { background: rgba(228,50,1,.1); }
+  .note { font: italic 400 15px/1.5 var(--display); opacity: .7; margin-top: 12px; }
+  .qa { display: grid; grid-template-columns: 1fr 1fr; gap: 0 5vw; }
+  .q { border-top: 1px solid rgba(15,13,10,.25); padding: 26px 0 30px; }
+  .q h3 { margin: 0 0 10px; font: 500 clamp(24px, 2.2vw, 32px)/1.15 var(--display); letter-spacing: -.02em; }
+  .q p { margin: 0; color: #4A3F33; font-size: 16.5px; }
+  code { font: 500 .88em ui-monospace, Menlo, monospace; background: var(--paper-2); padding: 1px 6px; }
 
-  /* Arabic */
-  .ar { direction: rtl; font-family: var(--arabic); }
-  .ar .sec-head { direction: rtl; }
-  .ar h2 { font-family: var(--arabic); font-weight: 700; letter-spacing: 0; line-height: 1.3; }
-  .ar .body { margin-left: 0; margin-right: 168px; }
-  .ar .columns p { font: 400 19px/1.95 var(--arabic); text-align: right; }
-  .ar .dropcap::first-letter { float: none; font: inherit; color: inherit; padding: 0; }
-  .ar .btn { font-family: var(--arabic); letter-spacing: 0; font-size: 16px; text-transform: none; }
+  /* ───────── VI. Arabic ───────── */
+  .ar { background: var(--ink); color: var(--paper); padding: 16vh var(--gut); direction: rtl; font-family: var(--arabic); }
+  .ar h2 { margin: 0 0 4vh; font: 700 clamp(40px, 6vw, 96px)/1.25 var(--arabic); }
+  .ar h2 span { color: var(--red); }
+  .ar p { max-width: 860px; font: 400 clamp(19px, 1.6vw, 23px)/2 var(--arabic); margin: 0 0 1.2em; color: #D9CDB8; }
+  .ar .btn { font-family: var(--arabic); letter-spacing: 0; text-transform: none; font-size: 17px; background: var(--red); color: var(--white); }
 
-  footer.colophon { padding: 36px 0 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
-    font: 400 15px/1.6 var(--text); color: var(--ink-2); }
-  footer.colophon h4 { font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); margin: 0 0 12px; }
-  footer.colophon p { margin: 0; }
+  /* ───────── Footer ───────── */
+  footer { background: var(--red); padding: 10vh var(--gut) 5vh; overflow: hidden; }
+  .bigdl { display: block; text-align: center; text-decoration: none; font: 400 clamp(110px, 25vw, 460px)/.9 var(--script); color: var(--ink); transition: color .4s; }
+  .bigdl:hover { color: var(--white); }
+  .colophon { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; border-top: 1px solid var(--ink); padding-top: 22px; margin-top: 4vh; }
+  .colophon p { margin: 0; font-size: 14px; }
+  .colophon b { display: block; font: 600 12px/1 var(--sans); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 10px; }
 
+  /* ───────── Responsive ───────── */
   @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; gap: 28px; padding-top: 40px; }
-    .sec-head { grid-template-columns: 1fr; gap: 10px; }
-    .numeral { font-size: 48px; }
-    .body, .pull { margin-left: 0; }
-    .ar .body { margin-right: 0; }
-    .index { grid-template-columns: 1fr 1fr; }
-    .item:not(:nth-child(3n+1)) { padding-left: 0; border-left: 0; }
-    .item:nth-child(2n) { padding-left: 22px; border-left: 1px solid var(--hair); }
-    .steps { grid-template-columns: 1fr 1fr; }
-    .steps li:nth-child(3) { padding-left: 0; border-left: 0; }
-    .masthead { grid-template-columns: 1fr; text-align: center; }
-    .masthead .l, .masthead .r { display: none; }
+    .names { font-size: clamp(30px, 8.4vw, 64px); top: 86px; }
+    .bar { grid-template-columns: 28px 1fr auto; gap: 10px; }
+    .bar .plus, .bar .plus::before { width: 22px; } .bar .plus::after { height: 22px; } .bar .plus { height: 22px; }
+    .bar .logo { font-size: 26px; text-align: center; }
+    .bar .cta { font-size: 11px; }
+    .col-head h2 { font-size: clamp(44px, 13vw, 90px); }
+    .statement h2 { font-size: clamp(48px, 15vw, 120px); }
+    .names .line { white-space: normal; }
+    .aside { position: absolute; width: auto; top: auto; }
+    .aside.l { display: none; }
+    .aside.r { left: 20px; right: 20px; bottom: 14px; z-index: 6; background: var(--red); padding: 12px 14px; }
+    .aside.r svg { display: none; }
+    .portrait { width: min(84vw, 52vh); }
+    .qa, .colophon { grid-template-columns: 1fr; }
+    .sec-title { grid-template-columns: 1fr; }
+    .col-head { flex-direction: column; align-items: start; }
+    .scrollcue { display: none; }
   }
-  @media (max-width: 640px) {
-    body { font-size: 18px; }
-    .page { padding: 0 16px; }
-    .topline nav { display: none; }
-    .columns { column-count: 1; }
-    .columns p { text-align: left; }
-    .index, .qa, .pair, .steps, footer.colophon { grid-template-columns: 1fr; }
-    .item, .item:nth-child(2n), .steps li, .steps li + li { padding-left: 0; border-left: 0; }
-    .btn { width: 100%; justify-content: center; }
-    section { padding: 52px 0; }
-  }
+  @media (prefers-reduced-motion: reduce) { .scrollcue i { animation: none; } }
 </style>
 </head>
 <body>
-<div class="page">
 
-  <div class="topline">
-    <span>Free · Open source · macOS 14+</span>
-    <nav aria-label="Sections">
-      <a href="#features">Features</a><a href="#compare">Compare</a><a href="#faq">Questions</a><a href="#install">Install</a><a href="https://github.com/mowshcashy/hierarchy-size">GitHub</a>
+<!-- I. Hero -->
+<header class="hero" id="top">
+  <div class="panel">
+    <nav class="bar" aria-label="Main">
+      <a class="plus" href="#collection" aria-label="Jump to the collection"></a>
+      <a class="logo" href="#top">Hierarchy Size</a>
+      <a class="cta" href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">Download</a>
     </nav>
-  </div>
 
-  <header class="masthead">
-    <div class="l">Vol. 1 · Edition 1.3</div>
-    <a class="title" href="#"><img src="assets/logo.svg" alt="Hierarchy Size logo" width="40" height="40">Hierarchy Size</a>
-    <div class="r">A disk space analyzer<br>for the Mac</div>
-  </header>
-  <div class="dateline"></div>
-
-  <main>
-    <div class="hero">
-      <div>
-        <p class="kicker">Storage, explained</p>
-        <h1>Where did all your <em>space</em> go?</h1>
-      </div>
-      <div>
-        <p class="deck"><strong style="font-style:normal">Hierarchy Size</strong> is a free, open-source disk space analyzer for macOS, the TreeSize alternative for Mac. It finds the folders and files filling your drive, in seconds.</p>
-        <div class="byline">1.5 MB download · Apple Silicon &amp; Intel · No ads · No account · No tracking</div>
-        <div class="actions">
-          <a class="btn" href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">Download for Mac <span class="arrow">→</span></a>
-          <a class="textlink" href="https://github.com/mowshcashy/hierarchy-size">Read the source</a>
-        </div>
-      </div>
+    <h1 class="visually-hidden">Hierarchy Size: free disk space analyzer for Mac, a TreeSize alternative</h1>
+    <div class="names" aria-hidden="true">
+      <span class="line" data-dir="-1"><span class="nm" data-ghost="Caches">Caches<sup class="n">(13.9)</sup></span><span class="sl">/</span><span class="nm" data-ghost="Downloads">Downloads<sup class="n">(31)</sup></span><span class="sl">/</span><span class="nm" data-ghost="Xcode">The <span class="script">Xcode</span><sup class="n">(24)</sup></span></span>
+      <span class="line" data-dir="1"><span class="nm" data-ghost="Photos">Photos Library<sup class="n">(41)</sup></span><span class="sl">/</span><span class="nm on" data-ghost="System Data">System Data<sup class="n">(18)</sup></span><span class="sl">/</span><span class="nm" data-ghost="Simulators">Simulators<sup class="n">(14)</sup></span></span>
+      <span class="line" data-dir="-1"><span class="nm" data-ghost="Support">Application Support<sup class="n">(26)</sup></span><span class="sl">/</span><span class="nm" data-ghost="Trash">the <span class="script">forgotten</span> Trash<sup class="n">(6.3)</sup></span></span>
     </div>
 
-    <figure class="lead-figure">
-      <div class="plate"><img src="assets/screenshot-welcome.png" alt="Hierarchy Size for Mac: the welcome screen in its editorial design, listing your drives" width="1282" height="1013"></div>
-      <figcaption><b>Fig. 1</b><span>The front page. Pick a drive and Hierarchy Size reads every file on it, then ranks every folder by the space it takes.</span></figcaption>
+    <div class="ghost" id="ghost" aria-hidden="true">System Data</div>
+
+    <figure class="portrait" style="margin:0">
+      <img src="assets/art/archivist.jpg" alt="Oil painting of an archivist holding a stack of ledgers, the emblem of Hierarchy Size" width="880" height="1168" fetchpriority="high">
     </figure>
 
-    <section id="story">
-      <div class="sec-head">
-        <div class="numeral">I.</div>
-        <div><h2>“Your disk is almost full.”</h2><p>The most unhelpful sentence in macOS</p></div>
-      </div>
-      <div class="body columns">
-        <p class="dropcap">Every Mac owner meets it eventually. A warning that the drive is full, and a Storage panel that files half of it under a shrug called “System Data.” The space is gone, but nobody can tell you where.</p>
-        <p>Hierarchy Size answers that question directly. Point it at a drive or any folder and it walks every file, in parallel, then lays the result out as a hierarchy: each folder sorted from largest to smallest, each one showing what share of its parent it consumes.</p>
-        <p>From there you can drill down as far as you like, flip to a treemap to see the whole disk at once, or ask for the 250 largest files outright. It also looks where other tools don't: APFS snapshots, swap memory, system volumes and mounted disk images, the usual suspects behind “System Data.”</p>
-        <p>When you've found what you don't need, you can send it to the Trash, delete it immediately, or empty the Trash, without leaving the app. Folders that macOS needs are protected, so a slip of the mouse can't take the system with it.</p>
-      </div>
-      <div class="pull">
-        <blockquote>“Storage almost full” is a question. Hierarchy Size is the answer, in about a second.</blockquote>
-        <cite>The idea behind the app</cite>
-      </div>
-    </section>
+    <div class="aside l caps">
+      <svg viewBox="0 0 92 50" aria-hidden="true"><path d="M8 6h28M8 6v38M8 18h16M8 30h16M8 42h16M30 18h18M30 30h30M30 42h12"/><circle cx="52" cy="18" r="3"/><circle cx="64" cy="30" r="3"/><circle cx="46" cy="42" r="3"/></svg>
+      <p>Hierarchy Size reads every file on your Mac and ranks every folder by the space it takes, from the largest down to the last.</p>
+    </div>
+    <div class="aside r caps">
+      <svg viewBox="0 0 92 50" aria-hidden="true"><path d="M30 6h32M30 44h32M34 6c0 14 24 14 24 19S34 30 34 44M58 6c0 14-24 14-24 19s24 5 24 19"/><path d="M40 40h12" /></svg>
+      <p>Free, open source and native to macOS. No ads, no account, no tracking. For Apple Silicon and Intel.</p>
+    </div>
 
-    <section id="features">
-      <div class="sec-head">
-        <div class="numeral">II.</div>
-        <div><h2>What it does</h2><p>Nine tools, one small native app</p></div>
-      </div>
-      <div class="index">
-        <div class="item"><div class="no">01</div><h3>Folder tree by size</h3><p>Every folder ranked largest first, with a bar for its share of the parent. Sort by size, files, or date.</p></div>
-        <div class="item"><div class="no">02</div><h3>Treemap</h3><p>The whole disk as nested rectangles. Hover for details, double-click to zoom into a folder.</p></div>
-        <div class="item"><div class="no">03</div><h3>Largest files</h3><p>The 250 biggest files under the current folder, ready to reveal in Finder or remove.</p></div>
-        <div class="item"><div class="no">04</div><h3>File types</h3><p>Space by category (video, images, apps, archives, documents) and by every extension.</p></div>
-        <div class="item"><div class="no">05</div><h3>File age</h3><p>How much of your drive hasn't been touched in a month, a year, five years.</p></div>
-        <div class="item"><div class="no">06</div><h3>Hidden space</h3><p>Snapshots, swap memory, Preboot, Recovery and disk images: what “System Data” is made of.</p></div>
-        <div class="item"><div class="no">07</div><h3>Run as administrator</h3><p>An optional superuser mode for files that belong to the system or other users.</p></div>
-        <div class="item"><div class="no">08</div><h3>Safe cleanup</h3><p>Move to Trash, Delete Immediately, Empty Trash. Top-level and system folders stay protected.</p></div>
-        <div class="item"><div class="no">09</div><h3>Private by design</h3><p>Runs only on your Mac. No network code, nothing collected. Every line is open source.</p></div>
-      </div>
-      <div class="pair">
-        <figure>
-          <div class="plate"><img src="assets/screenshot-tree.png" alt="Folder tree sorted by size in Hierarchy Size for Mac" loading="lazy" width="1282" height="1013"></div>
-          <figcaption><b>Fig. 2</b><span>The tree, sorted by size, with each folder's share of its parent.</span></figcaption>
-        </figure>
-        <figure>
-          <div class="plate"><img src="assets/screenshot-types.png" alt="Storage by file type chart in Hierarchy Size" loading="lazy" width="1282" height="1013"></div>
-          <figcaption><b>Fig. 3</b><span>Storage by file type, down to individual extensions.</span></figcaption>
-        </figure>
-      </div>
-    </section>
+    <div class="scrollcue caps" aria-hidden="true"><i></i>Scroll</div>
+  </div>
+</header>
 
-    <section id="compare">
-      <div class="sec-head">
-        <div class="numeral">III.</div>
-        <div><h2>The field</h2><p>Looking for TreeSize or WinDirStat on a Mac?</p></div>
+<main>
+  <!-- II. Manifesto -->
+  <section class="manifesto" aria-label="About Hierarchy Size">
+    <p class="kicker caps">(I) &nbsp;The premise</p>
+    <p class="big" id="manifesto">Every Mac fills up. Few will tell you why. Hierarchy Size reads every folder, weighs every file, and lays the answer out like a well-kept <span class="script">archive</span>, so you can see what to keep, and what to let go.</p>
+  </section>
+
+  <!-- III. Collection -->
+  <section class="collection" id="collection" aria-labelledby="col-title">
+    <div class="collection-pin">
+      <div class="col-head">
+        <h2 id="col-title">The <span class="script">Collection</span><sup class="n">(6)</sup></h2>
+        <p class="caps">Six instruments for understanding a full disk, each one a free part of Hierarchy Size. Scroll to walk the gallery.</p>
       </div>
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th></th><th>Hierarchy Size</th><th>DaisyDisk</th><th>GrandPerspective</th><th>OmniDiskSweeper</th><th>TreeSize / WinDirStat</th></tr></thead>
-          <tbody>
-            <tr><td>Runs on macOS</td><td class="us">Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No, Windows only</td></tr>
-            <tr><td>Free</td><td class="us">Yes</td><td>No, paid</td><td>Yes</td><td>Yes</td><td>Varies</td></tr>
-            <tr><td>Open source</td><td class="us">Yes, MIT</td><td>No</td><td>Yes</td><td>No</td><td>Varies</td></tr>
-            <tr><td>Sorted folder tree</td><td class="us">Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td></tr>
-            <tr><td>Treemap</td><td class="us">Yes</td><td>Sunburst</td><td>Yes</td><td>No</td><td>Yes</td></tr>
-            <tr><td>File type &amp; age reports</td><td class="us">Yes</td><td>No</td><td>No</td><td>No</td><td>Varies</td></tr>
-            <tr><td>Snapshots, swap, disk images</td><td class="us">Yes</td><td>Partly</td><td>No</td><td>No</td><td>No</td></tr>
-          </tbody>
-        </table>
+      <div class="track" id="track">
+        <figure class="plate">
+          <div class="frame shot"><img src="assets/screenshot-tree.png" alt="Hierarchy Size folder tree sorted by size" loading="lazy" width="1282" height="1013"></div>
+          <figcaption class="meta"><span class="no">Plate I.</span><div><h3>The <span class="script">Tree</span></h3><p>Every folder ranked from largest to smallest, with the share of its parent it consumes.</p></div></figcaption>
+        </figure>
+        <figure class="plate">
+          <div class="frame"><img src="assets/art/cabinet.jpg" alt="Oil painting of a card-catalog cabinet with open drawers" loading="lazy" width="896" height="1120"></div>
+          <figcaption class="meta"><span class="no">Plate II.</span><div><h3>Hidden <span class="script">Space</span></h3><p>Snapshots, swap memory, Preboot, Recovery and disk images: what “System Data” is made of.</p></div></figcaption>
+        </figure>
+        <figure class="plate">
+          <div class="frame shot"><img src="assets/screenshot-treemap.png" alt="Hierarchy Size treemap of a disk" loading="lazy" width="1600" height="1013"></div>
+          <figcaption class="meta"><span class="no">Plate III.</span><div><h3>The <span class="script">Treemap</span></h3><p>The whole disk as nested rectangles, each drawn in proportion to its size. Double-click to zoom.</p></div></figcaption>
+        </figure>
+        <figure class="plate">
+          <div class="frame"><img src="assets/art/magnifier.jpg" alt="Oil painting of a magnifying glass over a ledger" loading="lazy" width="896" height="1120"></div>
+          <figcaption class="meta"><span class="no">Plate IV.</span><div><h3>The <span class="script">Ledger</span></h3><p>The 250 largest files under any folder, ready to reveal in Finder or remove.</p></div></figcaption>
+        </figure>
+        <figure class="plate">
+          <div class="frame"><img src="assets/art/hourglass.jpg" alt="Oil painting of an hourglass beside old letters and a candle" loading="lazy" width="896" height="1120"></div>
+          <figcaption class="meta"><span class="no">Plate V.</span><div><h3>The <span class="script">Hourglass</span></h3><p>How much of your drive hasn't been touched in a month, a year, five years.</p></div></figcaption>
+        </figure>
+        <figure class="plate">
+          <div class="frame shot"><img src="assets/screenshot-types.png" alt="Hierarchy Size storage by file type" loading="lazy" width="1282" height="1013"></div>
+          <figcaption class="meta"><span class="no">Plate VI.</span><div><h3>File <span class="script">Types</span></h3><p>Video, images, apps, archives and documents, down to every extension.</p></div></figcaption>
+        </figure>
       </div>
+    </div>
+  </section>
+
+  <!-- IV. Statement -->
+  <section class="statement" aria-labelledby="st-title">
+    <h2 id="st-title">Where did all<br>your <span class="script">space</span> go?</h2>
+    <p class="sub caps">Pick a drive. In a few seconds you'll know, and you can delete what you don't need, safely, without leaving the app.</p>
+    <a class="btn" href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">Download for Mac <em>free</em></a>
+    <figure class="shot" style="margin-left:auto;margin-right:auto">
+      <img src="assets/screenshot-welcome.png" alt="Hierarchy Size welcome screen listing the drives on a Mac" loading="lazy" width="1282" height="1013">
+    </figure>
+  </section>
+
+  <!-- V. Reference -->
+  <section class="ref" id="compare" aria-labelledby="cmp-title">
+    <div class="sec-title"><span class="no">(II)</span><h2 id="cmp-title">The <span class="script">field</span></h2></div>
+    <div class="tablewrap">
+      <table>
+        <caption class="visually-hidden">Hierarchy Size compared with other disk space analyzers</caption>
+        <thead><tr><th></th><th>Hierarchy Size</th><th>DaisyDisk</th><th>GrandPerspective</th><th>OmniDiskSweeper</th><th>TreeSize / WinDirStat</th></tr></thead>
+        <tbody>
+          <tr><td>Runs on macOS</td><td class="us">Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No, Windows only</td></tr>
+          <tr><td>Free</td><td class="us">Yes</td><td>No, paid</td><td>Yes</td><td>Yes</td><td>Varies</td></tr>
+          <tr><td>Open source</td><td class="us">Yes, MIT</td><td>No</td><td>Yes</td><td>No</td><td>Varies</td></tr>
+          <tr><td>Sorted folder tree</td><td class="us">Yes</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Treemap</td><td class="us">Yes</td><td>Sunburst</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+          <tr><td>File type &amp; age reports</td><td class="us">Yes</td><td>No</td><td>No</td><td>No</td><td>Varies</td></tr>
+          <tr><td>Snapshots, swap, disk images</td><td class="us">Yes</td><td>Partly</td><td>No</td><td>No</td><td>No</td></tr>
+        </tbody>
+      </table>
       <p class="note">Compiled from each product's public information. Features change; check each vendor for the latest.</p>
-    </section>
-
-    <section id="faq">
-      <div class="sec-head">
-        <div class="numeral">IV.</div>
-        <div><h2>Questions &amp; answers</h2><p>What people ask about Mac storage</p></div>
-      </div>
-      <div class="qa">
-        <div class="q"><h3>How do I see what is taking up space on my Mac?</h3><p>Open Hierarchy Size and click Macintosh HD or any folder. Within seconds every folder is listed largest first. Expand the biggest, or switch to the Treemap to spot large files.</p></div>
-        <div class="q"><h3>Is there a TreeSize for Mac?</h3><p>TreeSize and WinDirStat are Windows apps. Hierarchy Size is a free, open-source TreeSize alternative for macOS, with a size-sorted folder tree, file type reports, a largest files list and CSV export.</p></div>
-        <div class="q"><h3>What is “System Data,” and how do I reduce it?</h3><p>Usually caches, logs, APFS snapshots, swap memory, iOS simulator runtimes and app support files. Hidden Space shows snapshots, swap and disk images; scan <code>~/Library/Caches</code> and <code>~/Library/Application Support</code> for the rest.</p></div>
-        <div class="q"><h3>Why didn't my free space grow after deleting?</h3><p>Deleted files sit in the Trash until it's emptied, and snapshots can hold deleted data. Empty the Trash from the sidebar, use Delete Immediately, and check Hidden Space.</p></div>
-        <div class="q"><h3>How do I find large files on my Mac?</h3><p>Scan a folder and open Largest Files. It lists the 250 biggest files with their location. Right-click to reveal in Finder or delete.</p></div>
-        <div class="q"><h3>Is it safe to delete <code>~/Library/Caches</code>?</h3><p>Usually, yes: apps rebuild their caches automatically. Quit the apps first, then delete their cache folders.</p></div>
-        <div class="q"><h3>Is Hierarchy Size free, safe and private?</h3><p>Yes. It's MIT-licensed, runs only on your Mac, has no network code and collects nothing. The source is public on GitHub.</p></div>
-        <div class="q"><h3>Does it run on Apple Silicon and Intel?</h3><p>Yes. It's a universal app for macOS 14 Sonoma and later, on M1, M2, M3, M4 and Intel Macs.</p></div>
-      </div>
-    </section>
-
-    <section id="install">
-      <div class="sec-head">
-        <div class="numeral">V.</div>
-        <div><h2>Install in thirty seconds</h2><p>No installer, no account</p></div>
-      </div>
-      <ol class="steps">
-        <li><a href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">Download Hierarchy-Size.zip</a>, about 1.5 MB.</li>
-        <li>Unzip it and drag <strong>Hierarchy Size</strong> into Applications.</li>
-        <li>The first time, right-click the app and choose <strong>Open</strong>.</li>
-        <li>Optionally, turn on <strong>Full Disk Access</strong> from the Permissions screen.</li>
-      </ol>
-    </section>
-
-    <section id="ar" class="ar" lang="ar">
-      <div class="sec-head">
-        <div class="numeral">VI.</div>
-        <div><h2>وين راحت مساحة جهازك؟</h2><p>بالعربي</p></div>
-      </div>
-      <div class="body columns">
-        <p><strong>Hierarchy Size</strong> برنامج مجاني ومفتوح المصدر للماك، بديل TreeSize. يعرض لك أكبر المجلدات والملفات مرتبة من الأكبر للأصغر، مع نسبة كل مجلد من المجلد اللي فوقه، وخريطة ملونة توضّح الملفات الكبيرة في لحظة.</p>
-        <p>ويكشف المساحة المخفية اللي يجمعها الماك تحت اسم «بيانات النظام»: اللقطات، وذاكرة التبديل، وأجزاء النظام، وملفات الأقراص. وتقدر تحذف اللي ما تحتاجه بأمان، أو تفرّغ سلة المهملات، من داخل البرنامج. يشتغل على جهازك فقط، بدون إنترنت وبدون تتبّع.</p>
-        <p><a class="btn" href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">حمّل البرنامج مجاناً</a></p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="colophon">
-    <div>
-      <h4>Colophon</h4>
-      <p>Hierarchy Size is written in Swift and SwiftUI and released under the MIT license. Source, issues and releases live on <a href="https://github.com/mowshcashy/hierarchy-size">GitHub</a>.</p>
     </div>
-    <div>
-      <h4>Trademarks</h4>
-      <p>TreeSize, WinDirStat, DaisyDisk, GrandPerspective and OmniDiskSweeper are trademarks of their respective owners. Hierarchy Size is not affiliated with them.</p>
+
+    <div class="sec-title" id="faq"><span class="no">(III)</span><h2>Questions &amp; <span class="script">answers</span></h2></div>
+    <div class="qa">
+      <div class="q"><h3>How do I see what is taking up space on my Mac?</h3><p>Open Hierarchy Size and click Macintosh HD or any folder. Within seconds every folder is listed largest first. Expand the biggest, or switch to the Treemap to spot large files.</p></div>
+      <div class="q"><h3>Is there a TreeSize for Mac?</h3><p>TreeSize and WinDirStat are Windows apps. Hierarchy Size is a free, open-source TreeSize alternative for macOS, with a size-sorted folder tree, file type reports, a largest files list and CSV export.</p></div>
+      <div class="q"><h3>What is “System Data,” and how do I reduce it?</h3><p>Usually caches, logs, APFS snapshots, swap memory, iOS simulator runtimes and app support files. Hidden Space shows snapshots, swap and disk images; scan <code>~/Library/Caches</code> and <code>~/Library/Application Support</code> for the rest.</p></div>
+      <div class="q"><h3>Why didn't my free space grow after deleting?</h3><p>Deleted files sit in the Trash until it's emptied, and snapshots can hold deleted data. Empty the Trash from the sidebar, use Delete Immediately, and check Hidden Space.</p></div>
+      <div class="q"><h3>How do I find large files on my Mac?</h3><p>Scan a folder and open Largest Files. It lists the 250 biggest files with their location. Right-click to reveal in Finder or delete.</p></div>
+      <div class="q"><h3>Is it safe to delete <code>~/Library/Caches</code>?</h3><p>Usually, yes: apps rebuild their caches automatically. Quit the apps first, then delete their cache folders.</p></div>
+      <div class="q"><h3>Is Hierarchy Size free, safe and private?</h3><p>Yes. It's MIT-licensed, runs only on your Mac, has no network code and collects nothing. The source is public on GitHub.</p></div>
+      <div class="q"><h3>Does it run on Apple Silicon and Intel?</h3><p>Yes. It's a universal app for macOS 14 Sonoma and later, on M1, M2, M3, M4 and Intel Macs.</p></div>
     </div>
-  </footer>
-</div>
+  </section>
+
+  <!-- VI. Arabic -->
+  <section class="ar" lang="ar" aria-labelledby="ar-title">
+    <h2 id="ar-title">وين راحت <span>مساحة</span> جهازك؟</h2>
+    <p><strong>Hierarchy Size</strong> برنامج مجاني ومفتوح المصدر للماك، بديل TreeSize. يعرض لك أكبر المجلدات والملفات مرتبة من الأكبر للأصغر، مع نسبة كل مجلد من المجلد اللي فوقه، وخريطة ملونة توضّح الملفات الكبيرة في لحظة.</p>
+    <p>ويكشف المساحة المخفية اللي يجمعها الماك تحت اسم «بيانات النظام»: اللقطات، وذاكرة التبديل، وأجزاء النظام، وملفات الأقراص. وتقدر تحذف اللي ما تحتاجه بأمان، من داخل البرنامج. يشتغل على جهازك فقط، بدون إنترنت وبدون تتبّع.</p>
+    <a class="btn" href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">حمّل البرنامج مجاناً</a>
+  </section>
+</main>
+
+<footer>
+  <a class="bigdl" href="https://github.com/mowshcashy/hierarchy-size/releases/latest/download/Hierarchy-Size.zip">Download</a>
+  <div class="colophon">
+    <p><b>Hierarchy Size</b>A free disk space analyzer for macOS 14 and later. Universal app, about 1.5&nbsp;MB.</p>
+    <p><b>Source</b>Written in Swift and SwiftUI, MIT license. <a href="https://github.com/mowshcashy/hierarchy-size">github.com/mowshcashy/hierarchy-size</a></p>
+    <p><b>Trademarks</b>TreeSize, WinDirStat, DaisyDisk, GrandPerspective and OmniDiskSweeper belong to their owners. Hierarchy Size is not affiliated with them. Paintings generated for this site.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function () {
+  // Hovering a name swaps the giant script word behind the portrait.
+  var ghost = document.getElementById('ghost');
+  document.querySelectorAll('.names .nm').forEach(function (el) {
+    el.addEventListener('mouseenter', function () {
+      document.querySelectorAll('.names .nm.on').forEach(function (o) { o.classList.remove('on'); });
+      el.classList.add('on');
+      ghost.style.opacity = 0;
+      setTimeout(function () { ghost.textContent = el.dataset.ghost; ghost.style.opacity = 1; }, 180);
+    });
+  });
+
+  if (!window.gsap || !window.ScrollTrigger) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Smooth scrolling.
+  if (window.Lenis) {
+    var lenis = new Lenis({ lerp: 0.09 });
+    window.__lenis = lenis;
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) { var t = document.querySelector(a.getAttribute('href')); if (t) { e.preventDefault(); lenis.scrollTo(t); } });
+    });
+  }
+
+  // Intro.
+  gsap.from('.names .line', { yPercent: 60, opacity: 0, duration: 1.4, ease: 'expo.out', stagger: 0.12 });
+  gsap.from('.portrait', { yPercent: 18, opacity: 0, duration: 1.8, ease: 'expo.out', delay: 0.25 });
+  gsap.from('.aside, .bar', { opacity: 0, duration: 1.2, delay: 0.7, stagger: 0.1 });
+
+  var mm = gsap.matchMedia();
+
+  // Hero: the framed panel opens to full bleed, the lines drift apart, the archivist steps forward.
+  mm.add('(min-width: 901px)', function () {
+    var tl = gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=130%', scrub: 1, pin: true } });
+    tl.to('.panel', { inset: 0, borderRadius: 0, ease: 'none' }, 0)
+      .to('.names .line[data-dir="-1"]', { xPercent: -18, ease: 'none' }, 0)
+      .to('.names .line[data-dir="1"]', { xPercent: 16, ease: 'none' }, 0)
+      .to('.names', { opacity: 0, yPercent: -30, ease: 'power1.in' }, 0.35)
+      .to('.portrait', { scale: 1.18, yPercent: -4, transformOrigin: '50% 100%', ease: 'none' }, 0)
+      .to('.ghost', { xPercent: -22, ease: 'none' }, 0)
+      .to('.aside.l', { xPercent: -40, opacity: 0, ease: 'none' }, 0.2)
+      .to('.aside.r', { xPercent: 40, opacity: 0, ease: 'none' }, 0.2)
+      .to('.scrollcue', { opacity: 0 }, 0);
+  });
+
+  // Manifesto: words light up as you read.
+  var m = document.getElementById('manifesto');
+  var out = [];
+  m.childNodes.forEach(function (n) {
+    if (n.nodeType === 3) {
+      n.textContent.split(/(\s+)/).forEach(function (t) { out.push(/^\s+$/.test(t) || !t ? document.createTextNode(t) : Object.assign(document.createElement('span'), { className: 'w', textContent: t })); });
+    } else { n.classList.add('w'); out.push(n); }
+  });
+  m.textContent = ''; out.forEach(function (n) { m.appendChild(n); });
+  gsap.fromTo('#manifesto .w', { opacity: 0.12 }, { opacity: 1, stagger: 0.08, ease: 'none',
+    scrollTrigger: { trigger: '.manifesto', start: 'top 70%', end: 'bottom 75%', scrub: true } });
+
+  // Collection: a horizontal gallery on wide screens, parallax plates everywhere.
+  mm.add('(min-width: 901px)', function () {
+    document.documentElement.classList.add('is-h');
+    var track = document.getElementById('track');
+    var dist = function () { return track.scrollWidth - window.innerWidth + parseFloat(getComputedStyle(track).paddingLeft); };
+    var h = gsap.to(track, { x: function () { return -dist(); }, ease: 'none',
+      scrollTrigger: { trigger: '.collection', start: 'top top', end: function () { return '+=' + dist(); }, scrub: 1, pin: true, invalidateOnRefresh: true } });
+    gsap.utils.toArray('.plate .frame img').forEach(function (img) {
+      gsap.fromTo(img, { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img.closest('.plate'), containerAnimation: h, start: 'left right', end: 'right left', scrub: true } });
+    });
+    return function () { document.documentElement.classList.remove('is-h'); };
+  });
+  mm.add('(max-width: 900px)', function () {
+    gsap.utils.toArray('.plate').forEach(function (p) {
+      gsap.from(p, { y: 60, opacity: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: p, start: 'top 88%' } });
+    });
+  });
+
+  // Statement: the headline settles, the app rises into its frame.
+  gsap.from('.statement h2', { scale: 1.25, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.statement', start: 'top 85%', end: 'top 25%', scrub: true } });
+  gsap.from('.statement .shot', { y: 160, scale: 0.86, ease: 'none', scrollTrigger: { trigger: '.statement .shot', start: 'top bottom', end: 'center center', scrub: true } });
+
+  // Section titles and table rows.
+  gsap.utils.toArray('.sec-title, .q, tbody tr').forEach(function (el) {
+    gsap.from(el, { y: 40, opacity: 0, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
+  });
+  gsap.from('.bigdl', { yPercent: 40, opacity: 0, ease: 'none', scrollTrigger: { trigger: 'footer', start: 'top bottom', end: 'top 30%', scrub: true } });
+
+  window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+})();
+</script>
 </body>
 </html>
