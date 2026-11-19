@@ -236,7 +236,7 @@ struct HiddenSpaceView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Label("Hidden Space", systemImage: "eye.slash").font(.title2.bold())
+                Text("Hidden Space").font(Theme.display(30)).foregroundStyle(Theme.ink)
                 Spacer()
                 if model.hiddenLoading { ProgressView().controlSize(.small) }
                 Button { model.loadHiddenSpace() } label: { Image(systemName: "arrow.clockwise") }
@@ -252,6 +252,8 @@ struct HiddenSpaceView: View {
             }
         }
         .frame(width: 760, height: 640)
+        .background(Theme.paper)
+        .tint(Theme.accent)
         .onAppear { model.loadHiddenSpace() }
         .confirmationDialog("Delete this snapshot?", isPresented: Binding(get: { pendingSnapshot != nil }, set: { if !$0 { pendingSnapshot = nil } })) {
             Button("Delete Snapshot", role: .destructive) { if let s = pendingSnapshot { model.deleteSnapshot(s) }; pendingSnapshot = nil }
@@ -372,12 +374,12 @@ struct HiddenSpaceView: View {
 
     private func section<C: View>(_ title: String, _ subtitle: String, @ViewBuilder _ c: () -> C) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title).font(.headline)
-            Text(subtitle).font(.callout).foregroundStyle(.secondary)
+            Text(title).font(Theme.display(22)).foregroundStyle(Theme.ink)
+            Text(subtitle).font(Theme.display(14).italic()).foregroundStyle(Theme.ink2)
             VStack(alignment: .leading, spacing: 4) { c() }
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+                .overlay(alignment: .top) { Rectangle().fill(Theme.ink).frame(height: 1) }
         }
     }
 }

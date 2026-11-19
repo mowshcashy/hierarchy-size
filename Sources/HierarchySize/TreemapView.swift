@@ -1,18 +1,19 @@
 import SwiftUI
 
 extension FileCategory {
+    /// Muted, print-like palette.
     var color: Color {
         switch self {
-        case .folder: Color(red: 0.55, green: 0.60, blue: 0.68)
-        case .image: Color(red: 0.95, green: 0.55, blue: 0.25)
-        case .video: Color(red: 0.88, green: 0.30, blue: 0.40)
-        case .audio: Color(red: 0.70, green: 0.40, blue: 0.85)
-        case .document: Color(red: 0.25, green: 0.60, blue: 0.95)
-        case .code: Color(red: 0.25, green: 0.75, blue: 0.60)
-        case .archive: Color(red: 0.90, green: 0.75, blue: 0.25)
-        case .app: Color(red: 0.40, green: 0.50, blue: 0.95)
-        case .data: Color(red: 0.45, green: 0.75, blue: 0.85)
-        case .other: Color(red: 0.62, green: 0.64, blue: 0.66)
+        case .folder: Color(red: 0.55, green: 0.52, blue: 0.47)
+        case .image: Color(red: 0.80, green: 0.47, blue: 0.24)
+        case .video: Color(red: 0.66, green: 0.23, blue: 0.20)
+        case .audio: Color(red: 0.47, green: 0.33, blue: 0.53)
+        case .document: Color(red: 0.20, green: 0.33, blue: 0.53)
+        case .code: Color(red: 0.31, green: 0.48, blue: 0.40)
+        case .archive: Color(red: 0.76, green: 0.62, blue: 0.27)
+        case .app: Color(red: 0.27, green: 0.38, blue: 0.62)
+        case .data: Color(red: 0.36, green: 0.55, blue: 0.60)
+        case .other: Color(red: 0.62, green: 0.59, blue: 0.53)
         }
     }
 }
@@ -147,7 +148,7 @@ struct TreemapView: View {
                 }
             }
             .padding(8)
-            .background(Color(nsColor: .textBackgroundColor))
+            .background(Theme.paper)
             .overlay(alignment: .bottomLeading) {
                 Text("Click to select · Double-click a folder to zoom in · ⌘↑ to go up")
                     .font(.caption).foregroundStyle(.secondary)

@@ -24,6 +24,8 @@
 - **Language:** Swift and SwiftUI, 100% native
 - **Use it for:** "Storage almost full" warnings, finding large files on Mac, cleaning caches, understanding "System Data"
 
+![Hierarchy Size for Mac, editorial design: where did all your space go?](assets/screenshot-welcome.png)
+
 ![Hierarchy Size tree view showing folders on a Mac sorted by size](assets/screenshot-tree.png)
 
 ## Features
@@ -42,6 +44,7 @@
 | 🔍 **Search** | Find any file or folder by name across the whole scan. |
 | 📤 **CSV export** | Export a full report to Excel, Numbers or Google Sheets. |
 | 💾 **Drives overview** | Every mounted drive with used and free space. |
+| 📰 **Editorial design** | A calm, print-inspired interface: serif headlines, paper tones, light and dark mode. |
 
 ![Treemap of a Mac disk in Hierarchy Size, each rectangle sized by file size](assets/screenshot-treemap.png)
 

@@ -18,7 +18,6 @@ struct ContentView: View {
                 } else if let focus = model.focus, !model.isScanning {
                     VStack(spacing: 0) {
                         SummaryHeader(focus: focus)
-                        Divider()
                         Group {
                             if !model.searchText.isEmpty {
                                 SearchResultsView()
@@ -33,7 +32,7 @@ struct ContentView: View {
                             }
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        Divider()
+                        .background(Theme.paper)
                         StatusBar()
                     }
                 } else {
@@ -41,7 +40,9 @@ struct ContentView: View {
                 }
             }
             .frame(minWidth: 640, minHeight: 420)
+            .background(Theme.paper)
         }
+        .tint(Theme.accent)
         .toolbar { MainToolbar() }
         .searchable(text: $model.searchText, placement: .toolbar, prompt: "Search files & folders")
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
@@ -219,10 +220,11 @@ struct VolumeRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Label(volume.name, systemImage: volume.url.path == "/" ? "internaldrive" : "externaldrive")
-            ProgressView(value: volume.fraction)
-                .tint(volume.fraction > 0.9 ? .red : volume.fraction > 0.75 ? .orange : .accentColor)
+            EditorialBar(fraction: volume.fraction, warn: volume.fraction > 0.9)
+                .frame(height: 3)
             Text("\(volume.available.bytesString) free of \(volume.total.bytesString)")
-                .font(.caption2).foregroundStyle(.secondary)
+                .font(.system(size: 9.5, design: .monospaced)).textCase(.uppercase)
+                .foregroundStyle(.secondary)
         }
         .padding(.vertical, 2)
         .contentShape(Rectangle())
@@ -233,60 +235,117 @@ struct VolumeRow: View {
 
 struct WelcomeView: View {
     @EnvironmentObject var model: AppModel
-    var body: some View {
-        VStack(spacing: 22) {
-            Image(systemName: "chart.bar.doc.horizontal")
-                .font(.system(size: 64, weight: .light))
-                .foregroundStyle(.tint)
-            VStack(spacing: 6) {
-                Text("Hierarchy Size").font(.largeTitle.bold())
-                Text("See what's taking up space on your Mac.").foregroundStyle(.secondary)
-            }
-            Button { model.chooseFolder() } label: {
-                Label("Choose a Folder to Scan", systemImage: "folder.badge.plus").padding(.horizontal, 8)
-            }
-            .controlSize(.large)
-            .buttonStyle(.borderedProminent)
-            .keyboardShortcut(.defaultAction)
 
-            if !model.volumes.isEmpty {
-                HStack(spacing: 14) {
-                    ForEach(model.volumes) { v in
+    private var version: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1"
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Text("Vol. 1 · Edition \(version)").kicker()
+                    Spacer()
+                    Text("A disk space analyzer for the Mac").kicker()
+                }
+                .padding(.bottom, 10)
+                MastheadRule()
+
+                VStack(alignment: .leading, spacing: 18) {
+                    Text("Storage, explained").kicker(Theme.accent)
+                    (Text("Where did all your ")
+                     + Text("space").italic().foregroundColor(Theme.accent)
+                     + Text(" go?"))
+                        .font(Theme.display(64, weight: .regular))
+                        .foregroundStyle(Theme.ink)
+                        .lineSpacing(-6)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text("Choose a drive or a folder. In a few seconds every folder is ranked from largest to smallest, with the share of space it takes.")
+                        .font(Theme.display(19).italic())
+                        .foregroundStyle(Theme.ink2)
+                        .frame(maxWidth: 560, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                    HStack(spacing: 18) {
+                        Button { model.chooseFolder() } label: {
+                            Text("Choose a folder  →")
+                        }
+                        .buttonStyle(InkButtonStyle())
+                        .keyboardShortcut(.defaultAction)
+                        Text("or drag one onto this window").font(Theme.display(14).italic()).foregroundStyle(Theme.ink3)
+                    }
+                    .padding(.top, 6)
+                }
+                .padding(.vertical, 36)
+
+                if !model.volumes.isEmpty {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("I.").font(Theme.display(30).italic()).foregroundStyle(Theme.accent)
+                        Text("Your drives").font(Theme.display(30)).foregroundStyle(Theme.ink)
+                    }
+                    .padding(.bottom, 10)
+                    Rectangle().fill(Theme.ink).frame(height: 1)
+                    ForEach(Array(model.volumes.enumerated()), id: \.element.id) { i, v in
                         Button { model.scan(v.url) } label: {
-                            VolumeRow(volume: v).frame(width: 190).padding(12)
-                                .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
-                        }.buttonStyle(.plain)
+                            HStack(alignment: .center, spacing: 18) {
+                                Text(String(format: "%02d", i + 1)).kicker(Theme.accent).frame(width: 26, alignment: .leading)
+                                Text(v.name).font(Theme.display(20)).foregroundStyle(Theme.ink)
+                                Spacer()
+                                VStack(alignment: .trailing, spacing: 5) {
+                                    Text("\(v.available.bytesString) free of \(v.total.bytesString)").kicker()
+                                    EditorialBar(fraction: v.fraction, warn: v.fraction > 0.9)
+                                        .frame(width: 180, height: 5)
+                                }
+                            }
+                            .padding(.vertical, 14)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        Hairline()
                     }
                 }
             }
-            Text("Or drag a folder onto this window.").font(.callout).foregroundStyle(.tertiary)
+            .padding(.horizontal, 48).padding(.vertical, 28)
+            .frame(maxWidth: 980, alignment: .leading)
+            .frame(maxWidth: .infinity)
         }
-        .padding(40)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Theme.paper)
     }
 }
 
 struct ScanningView: View {
     @EnvironmentObject var model: AppModel
     var body: some View {
-        VStack(spacing: 16) {
-            ProgressView().controlSize(.large)
-            Text("Scanning…").font(.title2.bold())
-            HStack(spacing: 28) {
+        VStack(spacing: 22) {
+            Text("In progress").kicker(Theme.accent)
+            Text("Reading your drive…").font(Theme.display(40).italic()).foregroundStyle(Theme.ink)
+            ProgressView().controlSize(.small).tint(Theme.accent)
+            HStack(spacing: 0) {
                 stat("Files", model.live.files.formatted())
+                Rectangle().fill(Theme.hair).frame(width: 1, height: 44)
                 stat("Folders", model.live.folders.formatted())
+                Rectangle().fill(Theme.hair).frame(width: 1, height: 44)
                 stat("Size", model.live.bytes.bytesString)
             }
+            .padding(.vertical, 14)
+            .overlay(alignment: .top) { Rectangle().fill(Theme.ink).frame(height: 1) }
+            .overlay(alignment: .bottom) { Rectangle().fill(Theme.ink).frame(height: 1) }
             Text(model.live.currentPath)
-                .font(.caption).foregroundStyle(.secondary)
+                .font(.system(size: 11, design: .monospaced)).foregroundStyle(Theme.ink3)
                 .lineLimit(1).truncationMode(.middle)
                 .frame(maxWidth: 520)
-            Button("Cancel") { model.cancel() }.keyboardShortcut(.cancelAction)
+            Button("Cancel") { model.cancel() }
+                .buttonStyle(InkButtonStyle())
+                .keyboardShortcut(.cancelAction)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Theme.paper)
     }
     private func stat(_ t: String, _ v: String) -> some View {
-        VStack { Text(v).font(.title3.monospacedDigit().bold()); Text(t).font(.caption).foregroundStyle(.secondary) }
+        VStack(spacing: 4) {
+            Text(v).font(Theme.display(26).monospacedDigit()).foregroundStyle(Theme.ink)
+            Text(t).kicker()
+        }
+        .frame(width: 160)
     }
 }
 
@@ -297,20 +356,25 @@ struct SummaryHeader: View {
     let focus: FileNode
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 2) {
+                HStack(spacing: 6) {
                     ForEach(focus.ancestors) { a in
                         Button(a.name) { model.setFocus(a) }
                             .buttonStyle(.plain)
-                            .foregroundStyle(a === focus ? .primary : .secondary)
-                            .fontWeight(a === focus ? .semibold : .regular)
-                        if a !== focus { Image(systemName: "chevron.right").font(.caption2).foregroundStyle(.tertiary) }
+                            .kicker(a === focus ? Theme.accent : Theme.ink3)
+                        if a !== focus { Text("/").kicker(Theme.hair) }
                     }
                 }
             }
-            HStack(alignment: .firstTextBaseline, spacing: 22) {
-                Text(focus.size(model.sizeMode).bytesString).font(.system(size: 26, weight: .bold).monospacedDigit())
+            HStack(alignment: .lastTextBaseline, spacing: 0) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(focus.name).font(Theme.display(15).italic()).foregroundStyle(Theme.ink2).lineLimit(1)
+                    Text(focus.size(model.sizeMode).bytesString)
+                        .font(Theme.display(40, weight: .regular).monospacedDigit())
+                        .foregroundStyle(Theme.ink)
+                }
+                .padding(.trailing, 28)
                 metric("Files", focus.fileCount.formatted())
                 metric("Folders", focus.folderCount.formatted())
                 if let v = model.volume(containing: focus), v.total > 0 {
@@ -323,14 +387,18 @@ struct SummaryHeader: View {
                 CategoryBar(categories: stats.categories)
             }
         }
-        .padding(.horizontal, 16).padding(.vertical, 10)
+        .padding(.horizontal, 22).padding(.top, 14).padding(.bottom, 12)
+        .background(Theme.paper)
+        .overlay(alignment: .bottom) { MastheadRule() }
     }
 
     private func metric(_ t: String, _ v: String) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(v).font(.headline.monospacedDigit())
-            Text(t).font(.caption).foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 3) {
+            Text(v).font(Theme.display(19).monospacedDigit()).foregroundStyle(Theme.ink)
+            Text(t).kicker()
         }
+        .padding(.horizontal, 16)
+        .overlay(alignment: .leading) { Rectangle().fill(Theme.hair).frame(width: 1) }
     }
 }
 
@@ -338,7 +406,7 @@ struct CategoryBar: View {
     let categories: [CategoryStat]
     var body: some View {
         let total = max(1, categories.reduce(Int64(0)) { $0 + $1.size })
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
             GeometryReader { g in
                 HStack(spacing: 1) {
                     ForEach(categories) { c in
@@ -348,13 +416,12 @@ struct CategoryBar: View {
                     }
                 }
             }
-            .frame(height: 8)
-            .clipShape(Capsule())
-            HStack(spacing: 12) {
+            .frame(height: 6)
+            HStack(spacing: 14) {
                 ForEach(categories.prefix(7)) { c in
-                    HStack(spacing: 4) {
-                        Circle().fill(c.category.color).frame(width: 7, height: 7)
-                        Text("\(c.category.rawValue) \(c.size.bytesString)").font(.caption2).foregroundStyle(.secondary)
+                    HStack(spacing: 5) {
+                        Rectangle().fill(c.category.color).frame(width: 8, height: 8)
+                        Text("\(c.category.rawValue) \(c.size.bytesString)").kicker()
                     }
                 }
             }
@@ -367,29 +434,31 @@ struct StatusBar: View {
     var body: some View {
         HStack(spacing: 12) {
             if let s = model.selection {
-                Image(systemName: s.category.symbol)
-                Text(s.path).lineLimit(1).truncationMode(.middle)
-                Text(s.size(model.sizeMode).bytesString).bold()
+                Text(s.path).lineLimit(1).truncationMode(.middle).foregroundStyle(Theme.ink2)
+                Text(s.size(model.sizeMode).bytesString).foregroundStyle(Theme.ink).bold()
             } else {
-                Text("Scanned in \(model.scanDuration.formatted(.number.precision(.fractionLength(1)))) s")
+                Text("Scanned in \(model.scanDuration.formatted(.number.precision(.fractionLength(1)))) s").foregroundStyle(Theme.ink3)
             }
             Spacer()
             if AppModel.isRoot {
-                Label("Administrator", systemImage: "person.badge.key.fill")
-                    .foregroundStyle(.orange).help("Running as superuser")
+                Text("● Administrator").foregroundStyle(Theme.accent).help("Running as superuser")
             }
             if model.scanErrors > 0 {
                 Button {
                     model.showPermissions = true
                 } label: {
-                    Label("\(model.scanErrors) folders couldn't be read — grant Full Disk Access", systemImage: "lock.trianglebadge.exclamationmark")
+                    Text("\(model.scanErrors) folders unreadable · grant access")
+                        .underline()
+                        .foregroundStyle(Theme.accent)
                 }
-                .buttonStyle(.link)
+                .buttonStyle(.plain)
             }
         }
-        .font(.caption)
-        .padding(.horizontal, 12).padding(.vertical, 5)
-        .background(.bar)
+        .font(.system(size: 10.5, design: .monospaced))
+        .textCase(.uppercase)
+        .padding(.horizontal, 14).padding(.vertical, 6)
+        .background(Theme.paper)
+        .overlay(alignment: .top) { Rectangle().fill(Theme.ink).frame(height: 1) }
     }
 }
 
@@ -418,11 +487,29 @@ struct NodeMenu: View {
 struct NameCell: View {
     let node: FileNode
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 7) {
             Image(systemName: node.isUnreadable ? "lock.fill" : node.category.symbol)
-                .foregroundStyle(node.isDirectory ? Color.accentColor : node.category.color)
+                .font(.system(size: 11))
+                .foregroundStyle(node.isDirectory ? Theme.ink2 : node.category.color)
                 .frame(width: 16)
-            Text(node.name).lineLimit(1).truncationMode(.middle)
+            Text(node.name)
+                .font(node.isDirectory ? Theme.display(14, weight: .medium) : Theme.body)
+                .lineLimit(1).truncationMode(.middle)
+        }
+    }
+}
+
+/// Thin ink bar on a hairline track.
+struct EditorialBar: View {
+    let fraction: Double
+    var warn = false
+    var body: some View {
+        GeometryReader { g in
+            ZStack(alignment: .leading) {
+                Rectangle().fill(Theme.hair)
+                Rectangle().fill(warn ? Theme.accent : Theme.ink)
+                    .frame(width: g.size.width * CGFloat(min(1, max(0, fraction))))
+            }
         }
     }
 }
@@ -430,18 +517,11 @@ struct NameCell: View {
 struct PercentBar: View {
     let fraction: Double
     var body: some View {
-        HStack(spacing: 6) {
-            GeometryReader { g in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 2).fill(.quaternary)
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(LinearGradient(colors: [.accentColor.opacity(0.7), .accentColor], startPoint: .leading, endPoint: .trailing))
-                        .frame(width: g.size.width * CGFloat(min(1, max(0, fraction))))
-                }
-            }
-            .frame(height: 9)
+        HStack(spacing: 8) {
+            EditorialBar(fraction: fraction, warn: fraction >= 0.5).frame(height: 4)
             Text(fraction.formatted(.percent.precision(.fractionLength(1))))
-                .font(.caption.monospacedDigit()).foregroundStyle(.secondary)
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundStyle(Theme.ink3)
                 .frame(width: 46, alignment: .trailing)
         }
     }
@@ -486,6 +566,9 @@ struct TreeTableView: View {
             }
             .width(min: 50, ideal: 70)
         }
+        .scrollContentBackground(.hidden)
+        .background(Theme.paper)
+        .alternatingRowBackgrounds(.disabled)
         .contextMenu(forSelectionType: FileNode.self) { items in
             if let n = items.first { NodeMenu(node: n) }
         } primaryAction: { items in
@@ -533,6 +616,9 @@ struct SearchResultsView: View {
                     Text(n.modified?.formatted(date: .abbreviated, time: .omitted) ?? "").foregroundStyle(.secondary)
                 }.width(100)
             }
+            .scrollContentBackground(.hidden)
+            .background(Theme.paper)
+            .alternatingRowBackgrounds(.disabled)
             .contextMenu(forSelectionType: FileNode.self) { items in
                 if let n = items.first { NodeMenu(node: n) }
             } primaryAction: { items in
@@ -554,7 +640,7 @@ struct FileTypesView: View {
             let rows = stats.extensions.sorted(using: sortOrder)
             HSplitView {
                 VStack(alignment: .leading) {
-                    Text("By Category").font(.headline)
+                    Text("By category").font(Theme.display(24)).foregroundStyle(Theme.ink)
                     Chart(stats.categories) { c in
                         SectorMark(angle: .value("Size", Double(c.size)), innerRadius: .ratio(0.55), angularInset: 1)
                             .foregroundStyle(c.category.color)
@@ -587,6 +673,9 @@ struct FileTypesView: View {
                         .width(min: 120, ideal: 160)
                     TableColumn("Files", value: \ExtensionStat.count) { s in Text(s.count.formatted()).monospacedDigit() }
                 }
+                .scrollContentBackground(.hidden)
+                .background(Theme.paper)
+                .alternatingRowBackgrounds(.disabled)
             }
         } else {
             ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -615,6 +704,9 @@ struct LargestFilesView: View {
                     Text(n.modified?.formatted(date: .abbreviated, time: .omitted) ?? "").foregroundStyle(.secondary)
                 }.width(100)
             }
+            .scrollContentBackground(.hidden)
+            .background(Theme.paper)
+            .alternatingRowBackgrounds(.disabled)
             .contextMenu(forSelectionType: FileNode.self) { items in
                 if let n = items.first { NodeMenu(node: n) }
             } primaryAction: { items in
@@ -634,10 +726,10 @@ struct FileAgeView: View {
         if let stats = model.stats {
             let total = max(1, stats.ages.reduce(Int64(0)) { $0 + $1.size })
             VStack(alignment: .leading, spacing: 16) {
-                Text("Space by last modification date").font(.headline)
+                Text("Space by last modification date").font(Theme.display(26)).foregroundStyle(Theme.ink)
                 Chart(stats.ages) { b in
                     BarMark(x: .value("Age", b.label), y: .value("Size", Double(b.size) / 1_000_000_000))
-                        .foregroundStyle(Color.accentColor.gradient)
+                        .foregroundStyle(Theme.accent)
                         .annotation(position: .top) {
                             Text(b.size.bytesString).font(.caption2).foregroundStyle(.secondary)
                         }
@@ -676,7 +768,7 @@ struct PermissionsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
-                Label("Permissions", systemImage: "lock.shield").font(.title2.bold())
+                Text("Permissions").font(Theme.display(30)).foregroundStyle(Theme.ink)
                 Spacer()
                 Button("Done") { dismiss() }.keyboardShortcut(.defaultAction)
             }

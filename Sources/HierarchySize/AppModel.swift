@@ -75,12 +75,18 @@ final class AppModel: ObservableObject {
             showAdminPrompt = true
         }
         // `open -a "Hierarchy Size" --args /some/folder` scans that folder on launch.
-        if let arg = CommandLine.arguments.dropFirst().first(where: { !$0.hasPrefix("-") }) {
+        // `--tab=treemap` (tree, treemap, types, largest, age) opens that view.
+        let args = Array(CommandLine.arguments.dropFirst())
+        if let t = args.first(where: { $0.hasPrefix("--tab=") })?.dropFirst(6) {
+            let map: [String: MainTab] = ["tree": .tree, "treemap": .treemap, "types": .types, "largest": .largest, "age": .age]
+            if let tab = map[String(t)] { self.tab = tab }
+        }
+        if let dir = args.first(where: { a in
             var isDir: ObjCBool = false
-            if FileManager.default.fileExists(atPath: arg, isDirectory: &isDir), isDir.boolValue {
-                let url = URL(fileURLWithPath: arg)
-                DispatchQueue.main.async { self.scan(url) }
-            }
+            return !a.hasPrefix("-") && FileManager.default.fileExists(atPath: a, isDirectory: &isDir) && isDir.boolValue
+        }) {
+            let url = URL(fileURLWithPath: dir)
+            DispatchQueue.main.async { self.scan(url) }
         }
     }
 
